@@ -1,0 +1,15 @@
+# Arquivos de ambiente e credenciais
+.env
+*.env
+credentials.json
+token.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.class
+.venv/
+venv/
+*.log
+htmlcov/
+.pytest_cache/

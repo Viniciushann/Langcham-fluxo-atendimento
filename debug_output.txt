@@ -1,0 +1,48 @@
+2025-10-22 09:24:31,515 - src.config.settings - INFO - ==================================================
+2025-10-22 09:24:31,516 - src.config.settings - INFO - WhatsApp Bot - Configurações Carregadas
+2025-10-22 09:24:31,516 - src.config.settings - INFO - ==================================================
+2025-10-22 09:24:31,516 - src.config.settings - INFO - Ambiente: development
+2025-10-22 09:24:31,516 - src.config.settings - INFO - Host: 0.0.0.0:8000
+2025-10-22 09:24:31,516 - src.config.settings - INFO - Redis: localhost:6379
+2025-10-22 09:24:31,516 - src.config.settings - INFO - Supabase: https://znyypdwnqdlvqwwvffzk.supabase.co
+2025-10-22 09:24:31,516 - src.config.settings - INFO - WhatsApp Instance: Centro_oeste_draywal
+2025-10-22 09:24:31,517 - src.config.settings - INFO - Log Level: INFO
+2025-10-22 09:24:31,517 - src.config.settings - INFO - ==================================================
+2025-10-22 09:24:34,090 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-10-22 09:24:34,091 - src.graph.workflow - INFO - ============================================================
+2025-10-22 09:24:34,091 - src.graph.workflow - INFO - Criando grafo de atendimento...
+2025-10-22 09:24:34,092 - src.graph.workflow - INFO - ============================================================
+2025-10-22 09:24:34,093 - src.graph.workflow - INFO - Adicionando nós ao grafo...
+2025-10-22 09:24:34,096 - src.graph.workflow - INFO -   \u2713 Nós de webhook adicionados
+2025-10-22 09:24:34,098 - src.graph.workflow - INFO -   \u2713 Nós de mídia adicionados
+2025-10-22 09:24:34,099 - src.graph.workflow - INFO -   \u2713 Nó de agente adicionado
+2025-10-22 09:24:34,100 - src.graph.workflow - INFO -   \u2713 Nós de resposta adicionados
+2025-10-22 09:24:34,100 - src.graph.workflow - INFO -   \u2713 Entry point definido: validar_webhook
+2025-10-22 09:24:34,100 - src.graph.workflow - INFO - Definindo edges...
+2025-10-22 09:24:34,100 - src.graph.workflow - INFO -   \u2713 Edge: validar_webhook -> verificar_cliente | END
+2025-10-22 09:24:34,100 - src.graph.workflow - INFO -   \u2713 Edge: verificar_cliente -> cadastrar_cliente | processar_midia | END
+2025-10-22 09:24:34,101 - src.graph.workflow - INFO -   \u2713 Edge: cadastrar_cliente -> processar_midia | END
+2025-10-22 09:24:34,102 - src.graph.workflow - INFO -   \u2713 Edge: processar_midia -> [audio | imagem | texto]
+2025-10-22 09:24:34,102 - src.graph.workflow - INFO -   \u2713 Edge: [processadores de mídia] -> processar_agente
+2025-10-22 09:24:34,102 - src.graph.workflow - INFO -   \u2713 Edge: processar_agente -> fragmentar_resposta
+2025-10-22 09:24:34,102 - src.graph.workflow - INFO -   \u2713 Edge: fragmentar_resposta -> enviar_respostas | END
+2025-10-22 09:24:34,102 - src.graph.workflow - INFO -   \u2713 Edge: enviar_respostas -> END
+2025-10-22 09:24:34,102 - src.graph.workflow - INFO - Compilando grafo...
+2025-10-22 09:24:34,194 - src.graph.workflow - INFO - ============================================================
+2025-10-22 09:24:34,194 - src.graph.workflow - INFO - Grafo compilado com sucesso!
+2025-10-22 09:24:34,194 - src.graph.workflow - INFO - ============================================================
+Traceback (most recent call last):
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\debug_flow.py", line 49, in testar_fluxo_completo
+    estado_inicial = criar_estado_inicial(webhook_data)
+TypeError: criar_estado_inicial() takes 0 positional arguments but 1 was given
+
+============================================================
+TESTE DO FLUXO COMPLETO DO BOT
+============================================================
+
+1. Criando grafo...
+   [OK] Grafo criado com sucesso
+
+2. Criando estado inicial...
+
+[ERRO] ERRO NO TESTE: criar_estado_inicial() takes 0 positional arguments but 1 was given

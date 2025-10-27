@@ -1,0 +1,886 @@
+============================================================
+DIAGNOSTICO - 2025-10-22 10:18:22.318346
+============================================================
+
+1. Importando modulos...
+2025-10-22 10:18:23,915 - src.config.settings - INFO - ==================================================
+2025-10-22 10:18:23,916 - src.config.settings - INFO - WhatsApp Bot - Configurações Carregadas
+2025-10-22 10:18:23,916 - src.config.settings - INFO - ==================================================
+2025-10-22 10:18:23,917 - src.config.settings - INFO - Ambiente: development
+2025-10-22 10:18:23,917 - src.config.settings - INFO - Host: 0.0.0.0:8000
+2025-10-22 10:18:23,917 - src.config.settings - INFO - Redis: localhost:6379
+2025-10-22 10:18:23,918 - src.config.settings - INFO - Supabase: https://znyypdwnqdlvqwwvffzk.supabase.co
+2025-10-22 10:18:23,919 - src.config.settings - INFO - WhatsApp Instance: Centro_oeste_draywal
+2025-10-22 10:18:23,919 - src.config.settings - INFO - Log Level: INFO
+2025-10-22 10:18:23,920 - src.config.settings - INFO - ==================================================
+   OK - Modulos importados
+
+2. Verificando configuracoes...
+   OpenAI Key: OK
+   Supabase URL: https://znyypdwnqdlvqwwvffzk.supabase.co
+   Instance: Centro_oeste_draywal
+
+3. Criando grafo...
+2025-10-22 10:18:26,237 - src.graph.workflow - INFO - ============================================================
+2025-10-22 10:18:26,238 - src.graph.workflow - INFO - Criando grafo de atendimento...
+2025-10-22 10:18:26,238 - src.graph.workflow - INFO - ============================================================
+2025-10-22 10:18:26,240 - src.graph.workflow - INFO - Adicionando nós ao grafo...
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 56: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 30, in main
+    grafo = criar_grafo_atendimento()
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\graph\workflow.py", line 64, in criar_grafo_atendimento
+    logger.info("  ✓ Nós de webhook adicionados")
+Message: '  ✓ Nós de webhook adicionados'
+Arguments: ()
+2025-10-22 10:18:26,244 - src.graph.workflow - INFO -   ✓ Nós de webhook adicionados
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 56: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 30, in main
+    grafo = criar_grafo_atendimento()
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\graph\workflow.py", line 76, in criar_grafo_atendimento
+    logger.info("  ✓ Nós de mídia adicionados")
+Message: '  ✓ Nós de mídia adicionados'
+Arguments: ()
+2025-10-22 10:18:26,259 - src.graph.workflow - INFO -   ✓ Nós de mídia adicionados
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 56: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 30, in main
+    grafo = criar_grafo_atendimento()
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\graph\workflow.py", line 80, in criar_grafo_atendimento
+    logger.info("  ✓ Nó de agente adicionado")
+Message: '  ✓ Nó de agente adicionado'
+Arguments: ()
+2025-10-22 10:18:26,266 - src.graph.workflow - INFO -   ✓ Nó de agente adicionado
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 56: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 30, in main
+    grafo = criar_grafo_atendimento()
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\graph\workflow.py", line 85, in criar_grafo_atendimento
+    logger.info("  ✓ Nós de resposta adicionados")
+Message: '  ✓ Nós de resposta adicionados'
+Arguments: ()
+2025-10-22 10:18:26,270 - src.graph.workflow - INFO -   ✓ Nós de resposta adicionados
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 56: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 30, in main
+    grafo = criar_grafo_atendimento()
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\graph\workflow.py", line 89, in criar_grafo_atendimento
+    logger.info("  ✓ Entry point definido: validar_webhook")
+Message: '  ✓ Entry point definido: validar_webhook'
+Arguments: ()
+2025-10-22 10:18:26,272 - src.graph.workflow - INFO -   ✓ Entry point definido: validar_webhook
+2025-10-22 10:18:26,274 - src.graph.workflow - INFO - Definindo edges...
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 56: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 30, in main
+    grafo = criar_grafo_atendimento()
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\graph\workflow.py", line 104, in criar_grafo_atendimento
+    logger.info("  ✓ Edge: validar_webhook -> verificar_cliente | END")
+Message: '  ✓ Edge: validar_webhook -> verificar_cliente | END'
+Arguments: ()
+2025-10-22 10:18:26,275 - src.graph.workflow - INFO -   ✓ Edge: validar_webhook -> verificar_cliente | END
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 56: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 30, in main
+    grafo = criar_grafo_atendimento()
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\graph\workflow.py", line 116, in criar_grafo_atendimento
+    logger.info("  ✓ Edge: verificar_cliente -> cadastrar_cliente | processar_midia | END")
+Message: '  ✓ Edge: verificar_cliente -> cadastrar_cliente | processar_midia | END'
+Arguments: ()
+2025-10-22 10:18:26,277 - src.graph.workflow - INFO -   ✓ Edge: verificar_cliente -> cadastrar_cliente | processar_midia | END
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 56: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 30, in main
+    grafo = criar_grafo_atendimento()
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\graph\workflow.py", line 127, in criar_grafo_atendimento
+    logger.info("  ✓ Edge: cadastrar_cliente -> verificar_cliente | END")
+Message: '  ✓ Edge: cadastrar_cliente -> verificar_cliente | END'
+Arguments: ()
+2025-10-22 10:18:26,279 - src.graph.workflow - INFO -   ✓ Edge: cadastrar_cliente -> verificar_cliente | END
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 56: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 30, in main
+    grafo = criar_grafo_atendimento()
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\graph\workflow.py", line 139, in criar_grafo_atendimento
+    logger.info("  ✓ Edge: processar_midia -> [audio | imagem | texto]")
+Message: '  ✓ Edge: processar_midia -> [audio | imagem | texto]'
+Arguments: ()
+2025-10-22 10:18:26,281 - src.graph.workflow - INFO -   ✓ Edge: processar_midia -> [audio | imagem | texto]
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 56: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 30, in main
+    grafo = criar_grafo_atendimento()
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\graph\workflow.py", line 145, in criar_grafo_atendimento
+    logger.info("  ✓ Edge: [processadores de mídia] -> processar_agente")
+Message: '  ✓ Edge: [processadores de mídia] -> processar_agente'
+Arguments: ()
+2025-10-22 10:18:26,283 - src.graph.workflow - INFO -   ✓ Edge: [processadores de mídia] -> processar_agente
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 56: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 30, in main
+    grafo = criar_grafo_atendimento()
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\graph\workflow.py", line 149, in criar_grafo_atendimento
+    logger.info("  ✓ Edge: processar_agente -> fragmentar_resposta")
+Message: '  ✓ Edge: processar_agente -> fragmentar_resposta'
+Arguments: ()
+2025-10-22 10:18:26,285 - src.graph.workflow - INFO -   ✓ Edge: processar_agente -> fragmentar_resposta
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 56: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 30, in main
+    grafo = criar_grafo_atendimento()
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\graph\workflow.py", line 161, in criar_grafo_atendimento
+    logger.info("  ✓ Edge: fragmentar_resposta -> enviar_respostas | END")
+Message: '  ✓ Edge: fragmentar_resposta -> enviar_respostas | END'
+Arguments: ()
+2025-10-22 10:18:26,287 - src.graph.workflow - INFO -   ✓ Edge: fragmentar_resposta -> enviar_respostas | END
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 56: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 30, in main
+    grafo = criar_grafo_atendimento()
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\graph\workflow.py", line 172, in criar_grafo_atendimento
+    logger.info("  ✓ Edge: enviar_respostas -> END")
+Message: '  ✓ Edge: enviar_respostas -> END'
+Arguments: ()
+2025-10-22 10:18:26,290 - src.graph.workflow - INFO -   ✓ Edge: enviar_respostas -> END
+2025-10-22 10:18:26,292 - src.graph.workflow - INFO - Compilando grafo...
+2025-10-22 10:18:26,421 - src.graph.workflow - INFO - ============================================================
+2025-10-22 10:18:26,422 - src.graph.workflow - INFO - Grafo compilado com sucesso!
+2025-10-22 10:18:26,423 - src.graph.workflow - INFO - ============================================================
+   OK - Grafo criado
+
+4. Criando estado de teste...
+   OK - Estado criado
+
+5. Executando grafo (pode demorar 30s)...
+   Aguarde...
+2025-10-22 10:18:26,427 - src.nodes.webhook - INFO - ============================================================
+2025-10-22 10:18:26,428 - src.nodes.webhook - INFO - Iniciando validação do webhook
+2025-10-22 10:18:26,428 - src.nodes.webhook - INFO - ============================================================
+2025-10-22 10:18:26,428 - src.nodes.webhook - INFO - Webhook recebido:
+2025-10-22 10:18:26,429 - src.nodes.webhook - INFO -   Remote JID: 5562999999999@s.whatsapp.net
+2025-10-22 10:18:26,429 - src.nodes.webhook - INFO -   From Me: False
+2025-10-22 10:18:26,430 - src.nodes.webhook - INFO -   Message Type: conversation
+2025-10-22 10:18:26,430 - src.nodes.webhook - INFO -   Push Name: Teste
+2025-10-22 10:18:26,431 - src.nodes.webhook - INFO - Webhook validado com sucesso
+2025-10-22 10:18:26,431 - src.nodes.webhook - INFO -   Cliente número: 5562999999999
+2025-10-22 10:18:26,432 - src.nodes.webhook - INFO -   Cliente nome: Teste
+2025-10-22 10:18:26,432 - src.nodes.webhook - INFO -   Tipo mensagem: conversation
+2025-10-22 10:18:26,433 - src.nodes.webhook - INFO -   Próxima ação: verificar_cliente
+2025-10-22 10:18:26,437 - src.nodes.webhook - INFO - ============================================================
+2025-10-22 10:18:26,438 - src.nodes.webhook - INFO - Verificando cliente no banco de dados
+2025-10-22 10:18:26,438 - src.nodes.webhook - INFO - ============================================================
+2025-10-22 10:18:26,439 - src.nodes.webhook - INFO - Conectando ao Supabase...
+2025-10-22 10:18:27,271 - src.clients.supabase_client - INFO - Cliente Supabase inicializado: https://znyypdwnqdlvqwwvffzk.supabase.co
+2025-10-22 10:18:27,271 - src.nodes.webhook - INFO - Buscando cliente: 5562999999999
+2025-10-22 10:18:27,272 - src.clients.supabase_client - INFO - Buscando cliente com telefone: 5562999999999
+2025-10-22 10:18:28,504 - httpx - INFO - HTTP Request: GET https://znyypdwnqdlvqwwvffzk.supabase.co/rest/v1/leads?select=%2A&phone_numero=eq.5562999999999 "HTTP/2 200 OK"
+2025-10-22 10:18:28,507 - src.clients.supabase_client - INFO - Cliente encontrado: 607bc40a-49c2-4a9a-8734-a706dd212c29
+2025-10-22 10:18:28,507 - src.nodes.webhook - INFO - Cliente encontrado no banco de dados
+2025-10-22 10:18:28,507 - src.nodes.webhook - INFO -   ID: 607bc40a-49c2-4a9a-8734-a706dd212c29
+2025-10-22 10:18:28,508 - src.nodes.webhook - INFO -   Nome: None
+2025-10-22 10:18:28,508 - src.nodes.webhook - INFO - Próxima ação: processar_midia
+2025-10-22 10:18:28,511 - src.nodes.media - INFO - ============================================================
+2025-10-22 10:18:28,512 - src.nodes.media - INFO - Roteando tipo de mensagem
+2025-10-22 10:18:28,512 - src.nodes.media - INFO - ============================================================
+2025-10-22 10:18:28,512 - src.nodes.media - INFO - Tipo de mensagem detectado: conversation
+2025-10-22 10:18:28,512 - src.nodes.media - INFO - Direcionando para processamento de texto
+2025-10-22 10:18:28,514 - src.nodes.media - INFO - ============================================================
+2025-10-22 10:18:28,514 - src.nodes.media - INFO - Processando mensagem de texto
+2025-10-22 10:18:28,514 - src.nodes.media - INFO - ============================================================
+2025-10-22 10:18:28,514 - src.nodes.media - INFO - Texto processado: Teste...
+2025-10-22 10:18:28,514 - src.nodes.media - INFO - Texto processado com sucesso
+2025-10-22 10:18:28,514 - src.nodes.media - INFO - Direcionando para agente...
+2025-10-22 10:18:28,516 - src.nodes.agent - INFO - ============================================================
+2025-10-22 10:18:28,516 - src.nodes.agent - INFO - INICIANDO PROCESSAMENTO DO AGENTE
+2025-10-22 10:18:28,516 - src.nodes.agent - INFO - ============================================================
+2025-10-22 10:18:28,517 - src.nodes.agent - INFO - Cliente: Teste (5562999999999)
+2025-10-22 10:18:28,517 - src.nodes.agent - INFO - Usando texto processado: Teste...
+2025-10-22 10:18:28,517 - src.nodes.agent - INFO - Entrada do usuário (primeiros 200 chars): Teste...
+2025-10-22 10:18:30,724 - src.nodes.agent - INFO - LLM configurado: gpt-4o-2024-11-20, temperatura: 0.9
+2025-10-22 10:18:30,727 - src.nodes.agent - ERROR - Erro ao configurar RAG: No module named 'config'
+2025-10-22 10:18:30,727 - src.nodes.agent - WARNING - RAG não disponível - agente funcionará sem base de conhecimento
+2025-10-22 10:18:30,727 - src.nodes.agent - INFO - Agente configurado com 1 ferramentas: ['agendamento_tool']
+2025-10-22 10:18:30,727 - src.nodes.agent - WARNING - create_react_agent não disponível - usando LLM direto sem tools
+C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\nodes\agent.py:86: LangChainPendingDeprecationWarning: This class is deprecated and will be removed in a future version. You can swap to using the `PostgresChatMessageHistory` implementation in `langchain_postgres`. Please do not submit further PRs to this class.See <https://github.com/langchain-ai/langchain-postgres>
+  history = PostgresChatMessageHistory(
+2025-10-22 10:18:30,856 - src.nodes.agent - ERROR - Erro ao conectar ao PostgreSQL para histórico: No module named 'psycopg'
+2025-10-22 10:18:30,857 - src.nodes.agent - WARNING - Não foi possível carregar histórico: No module named 'psycopg'
+Exception ignored in: <function PostgresChatMessageHistory.__del__ at 0x000002635793A840>
+Traceback (most recent call last):
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\langchain_community\chat_message_histories\postgres.py", line 97, in __del__
+    if self.cursor:
+AttributeError: 'PostgresChatMessageHistory' object has no attribute 'cursor'
+2025-10-22 10:18:30,857 - src.nodes.agent - INFO - Invocando agente...
+2025-10-22 10:18:32,515 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f60a' in position 97: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\langgraph\_internal\_runnable.py", line 473, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\nodes\agent.py", line 471, in processar_agente
+    logger.info(f"Resposta do agente (primeiros 200 chars): {resposta_agente[:200]}...")
+Message: 'Resposta do agente (primeiros 200 chars): Oi! 😊 Tudo bem? Estou aqui para te ajudar. Me conta, como posso te auxiliar hoje? 🏗️...'
+Arguments: ()
+2025-10-22 10:18:33,257 - src.nodes.agent - INFO - Resposta do agente (primeiros 200 chars): Oi! 😊 Tudo bem? Estou aqui para te ajudar. Me conta, como posso te auxiliar hoje? 🏗️...
+2025-10-22 10:18:33,262 - src.nodes.agent - ERROR - Erro ao conectar ao PostgreSQL para histórico: No module named 'psycopg'
+2025-10-22 10:18:33,262 - src.nodes.agent - ERROR - Erro ao salvar histórico: No module named 'psycopg'
+Exception ignored in: <function PostgresChatMessageHistory.__del__ at 0x000002635793A840>
+Traceback (most recent call last):
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\langchain_community\chat_message_histories\postgres.py", line 97, in __del__
+    if self.cursor:
+AttributeError: 'PostgresChatMessageHistory' object has no attribute 'cursor'
+2025-10-22 10:18:33,263 - src.nodes.agent - INFO - Processamento concluído em 4.75s
+2025-10-22 10:18:33,263 - src.nodes.agent - INFO - ============================================================
+2025-10-22 10:18:33,264 - src.nodes.response - INFO - ============================================================
+2025-10-22 10:18:33,264 - src.nodes.response - INFO - INICIANDO FRAGMENTAÇÃO DE RESPOSTA
+2025-10-22 10:18:33,265 - src.nodes.response - INFO - ============================================================
+2025-10-22 10:18:33,265 - src.nodes.response - INFO - Resposta do agente (84 chars):
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f60a' in position 58: character maps to <undefined>
+Call stack:
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 1014, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 1043, in _bootstrap_inner
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 994, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 93, in _worker
+    work_item.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\langchain_core\runnables\config.py", line 594, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\nodes\response.py", line 167, in fragmentar_resposta
+    logger.info(f"{resposta_agente[:200]}...")
+Message: 'Oi! 😊 Tudo bem? Estou aqui para te ajudar. Me conta, como posso te auxiliar hoje? 🏗️...'
+Arguments: ()
+2025-10-22 10:18:33,265 - src.nodes.response - INFO - Oi! 😊 Tudo bem? Estou aqui para te ajudar. Me conta, como posso te auxiliar hoje? 🏗️...
+2025-10-22 10:18:33,271 - src.nodes.response - INFO - Tamanho máximo de fragmento: 300 chars
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 54: character maps to <undefined>
+Call stack:
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 1014, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 1043, in _bootstrap_inner
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 994, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 93, in _worker
+    work_item.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\langchain_core\runnables\config.py", line 594, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\nodes\response.py", line 186, in fragmentar_resposta
+    logger.info(f"✅ Resposta fragmentada em {len(fragmentos)} parte(s)")
+Message: '✅ Resposta fragmentada em 1 parte(s)'
+Arguments: ()
+2025-10-22 10:18:33,272 - src.nodes.response - INFO - ✅ Resposta fragmentada em 1 parte(s)
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f60a' in position 86: character maps to <undefined>
+Call stack:
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 1014, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 1043, in _bootstrap_inner
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 994, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 93, in _worker
+    work_item.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\langchain_core\runnables\config.py", line 594, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\nodes\response.py", line 190, in fragmentar_resposta
+    logger.info(f"  Fragmento {i}/{len(fragmentos)} ({len(fragmento)} chars): {fragmento[:50]}...")
+Message: '  Fragmento 1/1 (84 chars): Oi! 😊 Tudo bem? Estou aqui para te ajudar. Me cont...'
+Arguments: ()
+2025-10-22 10:18:33,275 - src.nodes.response - INFO -   Fragmento 1/1 (84 chars): Oi! 😊 Tudo bem? Estou aqui para te ajudar. Me cont...
+2025-10-22 10:18:33,278 - src.nodes.response - INFO - Fragmentação concluída em 0.013s
+2025-10-22 10:18:33,278 - src.nodes.response - INFO - ============================================================
+2025-10-22 10:18:33,280 - src.nodes.response - INFO - ============================================================
+2025-10-22 10:18:33,280 - src.nodes.response - INFO - INICIANDO ENVIO DE RESPOSTAS
+2025-10-22 10:18:33,280 - src.nodes.response - INFO - ============================================================
+2025-10-22 10:18:33,281 - src.nodes.response - INFO - Cliente: 5562999999999
+2025-10-22 10:18:33,281 - src.nodes.response - INFO - Total de fragmentos a enviar: 1
+2025-10-22 10:18:33,985 - src.clients.whatsapp_client - INFO - WhatsAppClient inicializado: https://evolution.centrooestedrywalldry.com.br - Instância: Centro_oeste_draywal
+2025-10-22 10:18:33,986 - src.nodes.response - INFO - WhatsAppClient inicializado
+2025-10-22 10:18:33,986 - src.nodes.response - INFO - ----------------------------------------
+2025-10-22 10:18:33,986 - src.nodes.response - INFO - Fragmento 1/1
+2025-10-22 10:18:33,986 - src.nodes.response - INFO - Tamanho: 84 chars
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f60a' in position 67: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\langgraph\_internal\_runnable.py", line 473, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\nodes\response.py", line 348, in enviar_respostas
+    logger.info(f"Preview: {fragmento[:100]}...")
+Message: 'Preview: Oi! 😊 Tudo bem? Estou aqui para te ajudar. Me conta, como posso te auxiliar hoje? 🏗️...'
+Arguments: ()
+2025-10-22 10:18:33,987 - src.nodes.response - INFO - Preview: Oi! 😊 Tudo bem? Estou aqui para te ajudar. Me conta, como posso te auxiliar hoje? 🏗️...
+2025-10-22 10:18:34,876 - httpx - INFO - HTTP Request: POST https://evolution.centrooestedrywalldry.com.br/chat/presence/Centro_oeste_draywal "HTTP/1.1 404 Not Found"
+2025-10-22 10:18:34,878 - src.clients.whatsapp_client - WARNING - Tentativa 1/3 falhou: Client error '404 Not Found' for url 'https://evolution.centrooestedrywalldry.com.br/chat/presence/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404. Tentando novamente em 1.0s...
+2025-10-22 10:18:36,131 - httpx - INFO - HTTP Request: POST https://evolution.centrooestedrywalldry.com.br/chat/presence/Centro_oeste_draywal "HTTP/1.1 404 Not Found"
+2025-10-22 10:18:36,131 - src.clients.whatsapp_client - WARNING - Tentativa 2/3 falhou: Client error '404 Not Found' for url 'https://evolution.centrooestedrywalldry.com.br/chat/presence/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404. Tentando novamente em 2.0s...
+2025-10-22 10:18:38,401 - httpx - INFO - HTTP Request: POST https://evolution.centrooestedrywalldry.com.br/chat/presence/Centro_oeste_draywal "HTTP/1.1 404 Not Found"
+2025-10-22 10:18:38,402 - src.clients.whatsapp_client - ERROR - Todas as 3 tentativas falharam: Client error '404 Not Found' for url 'https://evolution.centrooestedrywalldry.com.br/chat/presence/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\clients\whatsapp_client.py", line 110, in _request_with_retry
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://evolution.centrooestedrywalldry.com.br/chat/presence/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-10-22 10:18:38,407 - src.clients.whatsapp_client - WARNING - Erro ao enviar status typing (não crítico): Client error '404 Not Found' for url 'https://evolution.centrooestedrywalldry.com.br/chat/presence/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 54: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\langgraph\_internal\_runnable.py", line 473, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\nodes\response.py", line 355, in enviar_respostas
+    logger.info("✅ Status 'digitando' enviado")
+Message: "✅ Status 'digitando' enviado"
+Arguments: ()
+2025-10-22 10:18:38,407 - src.nodes.response - INFO - ✅ Status 'digitando' enviado
+2025-10-22 10:18:38,915 - src.nodes.response - INFO - Tentativa 1/3 de envio...
+2025-10-22 10:18:38,916 - src.clients.whatsapp_client - INFO - Enviando mensagem para: 5562999999999
+2025-10-22 10:18:39,369 - httpx - INFO - HTTP Request: POST https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal "HTTP/1.1 400 Bad Request"
+2025-10-22 10:18:39,370 - src.clients.whatsapp_client - WARNING - Tentativa 1/3 falhou: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400. Tentando novamente em 1.0s...
+2025-10-22 10:18:40,787 - httpx - INFO - HTTP Request: POST https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal "HTTP/1.1 400 Bad Request"
+2025-10-22 10:18:40,787 - src.clients.whatsapp_client - WARNING - Tentativa 2/3 falhou: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400. Tentando novamente em 2.0s...
+2025-10-22 10:18:43,190 - httpx - INFO - HTTP Request: POST https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal "HTTP/1.1 400 Bad Request"
+2025-10-22 10:18:43,191 - src.clients.whatsapp_client - ERROR - Todas as 3 tentativas falharam: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+Traceback (most recent call last):
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\clients\whatsapp_client.py", line 110, in _request_with_retry
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+2025-10-22 10:18:43,192 - src.clients.whatsapp_client - ERROR - Erro ao enviar mensagem para 5562999999999: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+Traceback (most recent call last):
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\clients\whatsapp_client.py", line 213, in enviar_mensagem
+    response = await self._request_with_retry("POST", url, json=payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\clients\whatsapp_client.py", line 132, in _request_with_retry
+    raise last_exception
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\clients\whatsapp_client.py", line 110, in _request_with_retry
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+2025-10-22 10:18:43,194 - src.nodes.response - ERROR - [ERRO] Erro ao enviar fragmento: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+2025-10-22 10:18:43,194 - src.nodes.response - INFO - Aguardando 2s antes de tentar novamente...
+2025-10-22 10:18:45,208 - src.nodes.response - INFO - Tentativa 2/3 de envio...
+2025-10-22 10:18:45,208 - src.clients.whatsapp_client - INFO - Enviando mensagem para: 5562999999999
+2025-10-22 10:18:45,633 - httpx - INFO - HTTP Request: POST https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal "HTTP/1.1 400 Bad Request"
+2025-10-22 10:18:45,635 - src.clients.whatsapp_client - WARNING - Tentativa 1/3 falhou: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400. Tentando novamente em 1.0s...
+2025-10-22 10:18:47,035 - httpx - INFO - HTTP Request: POST https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal "HTTP/1.1 400 Bad Request"
+2025-10-22 10:18:47,036 - src.clients.whatsapp_client - WARNING - Tentativa 2/3 falhou: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400. Tentando novamente em 2.0s...
+2025-10-22 10:18:49,446 - httpx - INFO - HTTP Request: POST https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal "HTTP/1.1 400 Bad Request"
+2025-10-22 10:18:49,447 - src.clients.whatsapp_client - ERROR - Todas as 3 tentativas falharam: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+Traceback (most recent call last):
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\clients\whatsapp_client.py", line 110, in _request_with_retry
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+2025-10-22 10:18:49,448 - src.clients.whatsapp_client - ERROR - Erro ao enviar mensagem para 5562999999999: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+Traceback (most recent call last):
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\clients\whatsapp_client.py", line 213, in enviar_mensagem
+    response = await self._request_with_retry("POST", url, json=payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\clients\whatsapp_client.py", line 132, in _request_with_retry
+    raise last_exception
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\clients\whatsapp_client.py", line 110, in _request_with_retry
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+2025-10-22 10:18:49,450 - src.nodes.response - ERROR - [ERRO] Erro ao enviar fragmento: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+2025-10-22 10:18:49,450 - src.nodes.response - INFO - Aguardando 2s antes de tentar novamente...
+2025-10-22 10:18:51,463 - src.nodes.response - INFO - Tentativa 3/3 de envio...
+2025-10-22 10:18:51,464 - src.clients.whatsapp_client - INFO - Enviando mensagem para: 5562999999999
+2025-10-22 10:18:51,860 - httpx - INFO - HTTP Request: POST https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal "HTTP/1.1 400 Bad Request"
+2025-10-22 10:18:51,861 - src.clients.whatsapp_client - WARNING - Tentativa 1/3 falhou: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400. Tentando novamente em 1.0s...
+2025-10-22 10:18:53,284 - httpx - INFO - HTTP Request: POST https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal "HTTP/1.1 400 Bad Request"
+2025-10-22 10:18:53,285 - src.clients.whatsapp_client - WARNING - Tentativa 2/3 falhou: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400. Tentando novamente em 2.0s...
+2025-10-22 10:18:55,709 - httpx - INFO - HTTP Request: POST https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal "HTTP/1.1 400 Bad Request"
+2025-10-22 10:18:55,711 - src.clients.whatsapp_client - ERROR - Todas as 3 tentativas falharam: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+Traceback (most recent call last):
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\clients\whatsapp_client.py", line 110, in _request_with_retry
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+2025-10-22 10:18:55,713 - src.clients.whatsapp_client - ERROR - Erro ao enviar mensagem para 5562999999999: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+Traceback (most recent call last):
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\clients\whatsapp_client.py", line 213, in enviar_mensagem
+    response = await self._request_with_retry("POST", url, json=payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\clients\whatsapp_client.py", line 132, in _request_with_retry
+    raise last_exception
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\clients\whatsapp_client.py", line 110, in _request_with_retry
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+2025-10-22 10:18:55,716 - src.nodes.response - ERROR - [ERRO] Erro ao enviar fragmento: Client error '400 Bad Request' for url 'https://evolution.centrooestedrywalldry.com.br/message/sendText/Centro_oeste_draywal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u274c' in position 55: character maps to <undefined>
+Call stack:
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\diagnostic.py", line 93, in <module>
+    asyncio.run(main())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\Vinicius Soutenio\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\langgraph\_internal\_runnable.py", line 473, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+  File "C:\Users\Vinicius Soutenio\OneDrive\Sites Vinicius\Langcham. fluxo atendimento\src\nodes\response.py", line 407, in enviar_respostas
+    logger.error(f"❌ Falha ao enviar fragmento {i} após {max_tentativas} tentativas")
+Message: '❌ Falha ao enviar fragmento 1 após 3 tentativas'
+Arguments: ()
+2025-10-22 10:18:55,717 - src.nodes.response - ERROR - ❌ Falha ao enviar fragmento 1 após 3 tentativas
+2025-10-22 10:18:55,722 - src.nodes.response - INFO - ============================================================
+2025-10-22 10:18:55,722 - src.nodes.response - INFO - ESTATÍSTICAS DE ENVIO
+2025-10-22 10:18:55,722 - src.nodes.response - INFO - ============================================================
+2025-10-22 10:18:55,723 - src.nodes.response - INFO - Total de fragmentos: 1
+2025-10-22 10:18:55,723 - src.nodes.response - INFO - Enviados com sucesso: 0
+2025-10-22 10:18:55,723 - src.nodes.response - INFO - Erros: 1
+2025-10-22 10:18:55,724 - src.nodes.response - INFO - Taxa de sucesso: 0.0%
+2025-10-22 10:18:55,724 - src.nodes.response - INFO - Tempo total: 22.44s
+2025-10-22 10:18:55,724 - src.nodes.response - INFO - ============================================================
+
+6. RESULTADO:
+   Erro: None
+   Cliente numero: 5562999999999
+   Cliente nome: Teste
+   Texto processado: True
+   Resposta agente: True
+   Fragmentos: 1
+   Next action: END
+
+7. RESPOSTA DO AGENTE:
+   Oi! 😊 Tudo bem? Estou aqui para te ajudar. Me conta, como posso te auxiliar hoje? 🏗️
+
+============================================================
+DIAGNOSTICO CONCLUIDO COM SUCESSO
+============================================================

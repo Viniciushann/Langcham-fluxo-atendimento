@@ -1,0 +1,2 @@
+[console_scripts]
+whatsapp-bot = src.main:main

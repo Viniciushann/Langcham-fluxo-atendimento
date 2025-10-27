@@ -1,0 +1,39 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	validar_webhook(validar_webhook)
+	verificar_cliente(verificar_cliente)
+	cadastrar_cliente(cadastrar_cliente)
+	processar_midia(processar_midia)
+	processar_audio(processar_audio)
+	processar_imagem(processar_imagem)
+	processar_texto(processar_texto)
+	processar_agente(processar_agente)
+	fragmentar_resposta(fragmentar_resposta)
+	enviar_respostas(enviar_respostas)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> validar_webhook;
+	cadastrar_cliente -. &nbsp;END&nbsp; .-> __end__;
+	cadastrar_cliente -.-> verificar_cliente;
+	enviar_respostas -. &nbsp;END&nbsp; .-> __end__;
+	fragmentar_resposta -. &nbsp;END&nbsp; .-> __end__;
+	fragmentar_resposta -.-> enviar_respostas;
+	processar_agente --> fragmentar_resposta;
+	processar_audio --> processar_agente;
+	processar_imagem --> processar_agente;
+	processar_midia -.-> processar_audio;
+	processar_midia -.-> processar_imagem;
+	processar_midia -.-> processar_texto;
+	processar_texto --> processar_agente;
+	validar_webhook -. &nbsp;END&nbsp; .-> __end__;
+	validar_webhook -.-> verificar_cliente;
+	verificar_cliente -. &nbsp;END&nbsp; .-> __end__;
+	verificar_cliente -.-> cadastrar_cliente;
+	verificar_cliente -.-> processar_midia;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc

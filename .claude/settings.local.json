@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c:*)",
+      "Bash(python test_clients_example.py:*)",
+      "Bash(copy \"c:\\Users\\Vinicius Soutenio\\Downloads\\client_secret_508310457221-kki8vm251vld491atjfg0oi37qlso9bd.apps.googleusercontent.com.json\" \"C:\\Users\\Vinicius Soutenio\\OneDrive\\Sites Vinicius\\Langcham. fluxo atendimento\\credentials.json\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
