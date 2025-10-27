@@ -211,12 +211,16 @@ Você é especializada em drywall, gesso, forros e divisórias.
    - Processos ("Como funciona...?", "Qual o prazo...?")
    - Garantias ("Tem garantia...?")
 
-3. **Use a ferramenta de agendamento** quando detectar intenções como:
-   - "Quero agendar"
-   - "Marcar uma visita"
-   - "Ver horários disponíveis"
-   - "Cancelar agendamento"
-   - "Reagendar"
+3. **AGENDAMENTO DE VISITAS TÉCNICAS**:
+   IMPORTANTE: Você NÃO tem acesso ao Google Calendar no momento.
+
+   Quando o cliente pedir para agendar ou consultar disponibilidade:
+   - Seja proativa e ofereça horários gerais (manhã/tarde)
+   - Sugira dias da semana disponíveis (segunda a sexta, das 8h às 18h)
+   - Informe que a equipe vai confirmar o horário exato por telefone
+   - Colete: nome, telefone, endereço, melhor dia/horário
+
+   Exemplo: "Temos disponibilidade de segunda a sexta, das 8h às 18h. Qual seria o melhor dia e período para você (manhã ou tarde)? Depois nossa equipe liga para confirmar o horário exato!"
 
 4. **Data e hora atuais**: {data_hora_atual} ({dia_semana})
    - Para "amanhã": calcule como {(agora + timedelta(days=1)).strftime('%d/%m/%Y')}
@@ -251,15 +255,23 @@ Você é especializada em drywall, gesso, forros e divisórias.
 </instrucoes_comportamento>
 
 <formato_resposta>
-IMPORTANTE: NUNCA use formatação markdown nas respostas! Nada de asteriscos, nada de bullet points com símbolos.
-Escreva APENAS texto puro e humanizado, como uma pessoa conversando no WhatsApp.
+⚠️ CRÍTICO - LEIA COM ATENÇÃO ⚠️
 
-REGRAS DE FORMATAÇÃO:
-- SEM asteriscos (*texto*)
-- SEM negrito (**texto**)
-- SEM bullet points (• ou -)
-- SEM markdown de nenhum tipo
-- APENAS texto corrido e quebras de linha
+VOCÊ ESTÁ PROIBIDO DE USAR QUALQUER FORMATAÇÃO MARKDOWN!
+
+JAMAIS use:
+❌ Hífens para listar (1. 2. 3. ou - item)
+❌ Asteriscos (*texto* ou **texto**)
+❌ Símbolos de bullet (• ou -)
+❌ Numeração (1. 2. 3.)
+❌ Quebras de linha seguidas de hífen (\n-)
+
+✅ APENAS escreva texto corrido e natural como no WhatsApp!
+
+Se você precisar listar coisas, escreva assim:
+CERTO: "Para o orçamento preciso saber qual o tipo de serviço, a área aproximada, a cidade e algum detalhe específico que você queira."
+
+ERRADO: "Para o orçamento preciso saber:\n1. Tipo de serviço\n2. Área aproximada"
 
 Como listar itens:
 ❌ ERRADO: "Trabalhamos com:\n• Paredes\n• Forros\n• Nichos"
@@ -375,12 +387,12 @@ async def _create_agent():
         # System prompt
         system_prompt = _get_system_prompt()
 
-        # NOTA: create_react_agent não existe mais no LangGraph.
-        # Por enquanto, retornar o LLM diretamente.
-        # TODO: Implementar agente com ToolNode quando necessário
-        logger.warning("create_react_agent não disponível - usando LLM direto sem tools")
+        # Vincular ferramentas ao LLM (bind_tools)
+        llm_with_tools = llm.bind_tools(tools)
 
-        # Criar chain simples com system prompt
+        logger.info(f"LLM configurado com {len(tools)} ferramentas vinculadas via bind_tools")
+
+        # Criar chain com system prompt e tools
         from langchain_core.prompts import ChatPromptTemplate
 
         prompt = ChatPromptTemplate.from_messages([
@@ -388,7 +400,7 @@ async def _create_agent():
             ("human", "{input}")
         ])
 
-        agent = prompt | llm
+        agent = prompt | llm_with_tools
 
         return agent
 
@@ -524,20 +536,99 @@ async def processar_agente(state: AgentState) -> AgentState:
             else:
                 entrada_com_historico = entrada_usuario
 
-            # Invocar agente (chain = prompt | llm)
-            result = await asyncio.wait_for(
-                agent.ainvoke({
-                    "input": entrada_com_historico
-                }),
-                timeout=settings.agent_timeout
-            )
+            # Invocar agente com loop ReAct para tool calls
+            # Pegar as tools para executar
+            retriever_tool = _create_retriever_tool()
+            tools_dict = {
+                "buscar_base_conhecimento": retriever_tool,
+                "agendamento_tool": agendamento_tool
+            }
 
-            # Extrair resposta
-            # result é um AIMessage do LLM
-            if not result:
-                raise ValueError("Resposta do agente inválida")
+            # Loop ReAct: invocar LLM, executar tools, invocar novamente
+            max_iterations = 3
+            iteration = 0
+            messages = []
 
+            while iteration < max_iterations:
+                iteration += 1
+                logger.info(f"ReAct iteration {iteration}/{max_iterations}")
+
+                # Invocar agente
+                result = await asyncio.wait_for(
+                    agent.ainvoke({
+                        "input": entrada_com_historico
+                    }),
+                    timeout=settings.agent_timeout
+                )
+
+                # Verificar se result é AIMessage
+                if not result:
+                    raise ValueError("Resposta do agente inválida")
+
+                # Verificar se há tool_calls
+                if hasattr(result, 'tool_calls') and result.tool_calls:
+                    logger.info(f"LLM solicitou {len(result.tool_calls)} tool calls")
+
+                    # Executar cada tool call
+                    for tool_call in result.tool_calls:
+                        tool_name = tool_call.get('name')
+                        tool_args = tool_call.get('args', {})
+
+                        logger.info(f"Executando tool: {tool_name} com args: {tool_args}")
+
+                        # Buscar a tool
+                        if tool_name in tools_dict:
+                            tool = tools_dict[tool_name]
+                            try:
+                                # Executar a tool
+                                tool_result = await tool.ainvoke(tool_args)
+                                logger.info(f"Tool {tool_name} retornou: {str(tool_result)[:200]}...")
+
+                                # Adicionar resultado ao contexto para próxima iteração
+                                entrada_com_historico += f"\n\n[Resultado de {tool_name}]: {tool_result}"
+                            except Exception as e:
+                                logger.error(f"Erro ao executar tool {tool_name}: {e}")
+                                entrada_com_historico += f"\n\n[Erro em {tool_name}]: {str(e)}"
+                        else:
+                            logger.warning(f"Tool {tool_name} não encontrada")
+
+                    # Continuar o loop para invocar o LLM novamente com os resultados
+                    continue
+                else:
+                    # Sem tool calls, temos a resposta final
+                    logger.info("LLM retornou resposta final (sem tool calls)")
+                    break
+
+            # Extrair resposta final
             resposta_agente = result.content if hasattr(result, 'content') else str(result)
+
+            # PÓS-PROCESSAMENTO: Remover qualquer formatação markdown que o LLM tenha ignorado
+            import re
+
+            # Remover bullet points com hífen no início de linha
+            resposta_agente = re.sub(r'\n\s*-\s+', '\n', resposta_agente)
+
+            # Remover bullet points com asterisco
+            resposta_agente = re.sub(r'\n\s*\*\s+', '\n', resposta_agente)
+
+            # Remover bullet points com ponto
+            resposta_agente = re.sub(r'\n\s*•\s+', '\n', resposta_agente)
+
+            # Remover numeração (1. 2. 3. etc)
+            resposta_agente = re.sub(r'\n\s*\d+\.\s+', '\n', resposta_agente)
+
+            # Remover negrito e itálico (**texto** ou *texto*)
+            resposta_agente = re.sub(r'\*\*(.+?)\*\*', r'\1', resposta_agente)
+            resposta_agente = re.sub(r'\*(.+?)\*', r'\1', resposta_agente)
+
+            # Substituir \n literal por quebra de linha real
+            resposta_agente = resposta_agente.replace('\\n', '\n')
+
+            # Remover múltiplas quebras de linha consecutivas (deixar no máximo 2)
+            resposta_agente = re.sub(r'\n{3,}', '\n\n', resposta_agente)
+
+            # Remover espaços em branco no início e fim
+            resposta_agente = resposta_agente.strip()
 
             logger.info(f"Resposta do agente (primeiros 200 chars): {resposta_agente[:200]}...")
 
