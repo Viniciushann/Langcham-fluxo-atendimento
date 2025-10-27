@@ -286,7 +286,8 @@ NUNCA use hífen (-) ou ponto (•) para listar. SEMPRE escreva em texto corrido
 ESTILO DE RESPOSTA:
 - Respostas curtas: 2-4 parágrafos no máximo
 - Use emojis ocasionalmente para humanizar: 😊 👍 🏗️ 📅 (mas não exagere!)
-- Quebre em parágrafos (use \n\n) se a resposta for longa
+- Para separar parágrafos, deixe uma linha em branco entre eles (natural, como no WhatsApp)
+- NUNCA escreva códigos de escape como \n, \t, \\n ou similares - escreva texto natural
 - Tom de conversa: Escreva como se estivesse conversando com um amigo no WhatsApp
 - Variação na linguagem: Não repita sempre as mesmas frases
 - Sempre finalize perguntando se o cliente tem mais dúvidas, mas varie as formas:
@@ -621,8 +622,16 @@ async def processar_agente(state: AgentState) -> AgentState:
             resposta_agente = re.sub(r'\*\*(.+?)\*\*', r'\1', resposta_agente)
             resposta_agente = re.sub(r'\*(.+?)\*', r'\1', resposta_agente)
 
-            # Substituir \n literal por quebra de linha real
-            resposta_agente = resposta_agente.replace('\\n', '\n')
+            # CRÍTICO: Remover TODAS as variações de \n literal que o LLM possa gerar
+            # Isso inclui: \n, \\n, \n\n, etc.
+            resposta_agente = resposta_agente.replace('\\n\\n', '\n\n')  # Double backslash
+            resposta_agente = resposta_agente.replace('\\n', '\n')  # Single backslash
+            resposta_agente = resposta_agente.replace(' \\n\\n ', '\n\n')  # Com espaços
+            resposta_agente = resposta_agente.replace(' \\n ', '\n')  # Com espaços
+
+            # Remover variações com backslash literal escrito pelo LLM
+            resposta_agente = re.sub(r'\s*\\n\\n\s*', '\n\n', resposta_agente)
+            resposta_agente = re.sub(r'\s*\\n\s*', ' ', resposta_agente)
 
             # Remover múltiplas quebras de linha consecutivas (deixar no máximo 2)
             resposta_agente = re.sub(r'\n{3,}', '\n\n', resposta_agente)
