@@ -547,3 +547,4 @@ MIT License - Sinta-se livre para usar e modificar este projeto.
 **Bom desenvolvimento! 🚀**
 
 Para começar, consulte o arquivo `AGENTE LANGGRAPH.txt` e execute a **Fase 0** para criar a estrutura base do projeto.
+# GitHub Actions Deploy Automatico Configurado
