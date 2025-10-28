@@ -267,10 +267,8 @@ class WhatsAppClient:
 
             payload = {
                 "number": telefone,
-                "options": {
-                    "delay": 1200,
-                    "presence": "composing"
-                }
+                "delay": 1200,
+                "presence": "composing"
             }
 
             logger.debug(f"Enviando status 'digitando' para: {telefone}")
@@ -298,10 +296,8 @@ class WhatsAppClient:
 
             payload = {
                 "number": telefone,
-                "options": {
-                    "delay": 1200,
-                    "presence": "available"
-                }
+                "delay": 1200,
+                "presence": "available"
             }
 
             await self._request_with_retry("POST", url, json=payload)
