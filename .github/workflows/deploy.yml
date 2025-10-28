@@ -70,9 +70,7 @@ jobs:
 
         # Criar credenciais do Google Calendar
         echo "🔑 Creating Google Calendar credentials..."
-        cat > credentials.json << 'CREDEOF'
-        ${{ secrets.GOOGLE_CALENDAR_CREDENTIALS }}
-        CREDEOF
+        echo '${{ secrets.GOOGLE_CALENDAR_CREDENTIALS }}' > credentials.json
 
         # Remover token.json se for diretório e criar arquivo vazio
         echo "📝 Setting up token.json..."
