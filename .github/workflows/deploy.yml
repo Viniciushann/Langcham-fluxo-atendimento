@@ -44,13 +44,17 @@ jobs:
         run: |
           # Criar diretório SSH
           mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
 
-          # Salvar chave privada
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          # Salvar chave privada (preservando quebras de linha)
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
+          # Validar chave
+          ssh-keygen -l -f ~/.ssh/deploy_key || echo "Warning: Key validation failed"
+
           # Adicionar host ao known_hosts
-          ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+          ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts 2>/dev/null
 
           # Executar deploy via SSH
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'ENDSSH'
