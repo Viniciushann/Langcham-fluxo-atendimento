@@ -67,6 +67,15 @@ jobs:
         CORS_ORIGINS=https://evolution.centrooestedrywalldry.com.br,https://bot.automacaovn.shop
         ENVEOF
 
+        # Criar credenciais do Google Calendar
+        echo "🔑 Creating Google Calendar credentials..."
+        cat > credentials.json << 'CREDEOF'
+        ${{ secrets.GOOGLE_CALENDAR_CREDENTIALS }}
+        CREDEOF
+
+        # Criar token.json vazio (será preenchido após primeira autenticação)
+        echo "{}" > token.json
+
         # Build da imagem Docker
         echo "🔨 Building Docker image..."
         docker build -t whatsapp-bot-langchain:latest .
