@@ -42,6 +42,31 @@ jobs:
         echo "📍 Current commit:"
         git log -1 --oneline
 
+        # Criar arquivo .env com as variáveis de ambiente
+        echo "📝 Creating .env file..."
+        cat > .env << 'ENVEOF'
+        WHATSAPP_API_URL=https://evolution.centrooestedrywalldry.com.br
+        WHATSAPP_API_KEY=${{ secrets.WHATSAPP_API_KEY }}
+        WHATSAPP_INSTANCE=Centro_oeste_draywal
+        OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+        SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}
+        POSTGRES_CONNECTION_STRING=${{ secrets.POSTGRES_CONNECTION_STRING }}
+        REDIS_HOST=redis_redis
+        REDIS_PORT=6379
+        SECRET_KEY=${{ secrets.SECRET_KEY }}
+        ADMIN_TOKEN=${{ secrets.ADMIN_TOKEN }}
+        DOMAIN=bot.automacaovn.shop
+        ENVIRONMENT=production
+        PORT=8000
+        HOST=0.0.0.0
+        LOG_LEVEL=INFO
+        BOT_PHONE_NUMBER=556292745972
+        MESSAGE_GROUP_DELAY=25
+        GOOGLE_CALENDAR_CREDENTIALS_FILE=/app/credentials.json
+        CORS_ORIGINS=https://evolution.centrooestedrywalldry.com.br,https://bot.automacaovn.shop
+        ENVEOF
+
         # Build da imagem Docker
         echo "🔨 Building Docker image..."
         docker build -t whatsapp-bot-langchain:latest .
@@ -50,6 +75,16 @@ jobs:
         echo "🚀 Deploying to Docker Swarm..."
         docker stack rm whatsapp-bot 2>/dev/null || true
         sleep 5
+
+        # Exportar variáveis para o docker stack
+        export WHATSAPP_API_KEY='${{ secrets.WHATSAPP_API_KEY }}'
+        export OPENAI_API_KEY='${{ secrets.OPENAI_API_KEY }}'
+        export SUPABASE_URL='${{ secrets.SUPABASE_URL }}'
+        export SUPABASE_KEY='${{ secrets.SUPABASE_KEY }}'
+        export POSTGRES_CONNECTION_STRING='${{ secrets.POSTGRES_CONNECTION_STRING }}'
+        export SECRET_KEY='${{ secrets.SECRET_KEY }}'
+        export ADMIN_TOKEN='${{ secrets.ADMIN_TOKEN }}'
+
         docker stack deploy -c docker-compose.swarm.yml whatsapp-bot
 
         # Aguardar container iniciar
