@@ -46,13 +46,17 @@ jobs:
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          # Salvar chave privada (preservando quebras de linha)
-          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          # Salvar chave privada interpretando \n como quebra de linha
+          echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
-          # Debug: Mostrar primeiras linhas da chave
-          echo "Key file first line:"
+          # Debug: Mostrar estrutura da chave
+          echo "Key file structure:"
+          wc -l ~/.ssh/deploy_key
+          echo "First line:"
           head -1 ~/.ssh/deploy_key
+          echo "Last line:"
+          tail -1 ~/.ssh/deploy_key
 
           # Validar chave
           ssh-keygen -l -f ~/.ssh/deploy_key || echo "Warning: Key validation failed"
