@@ -365,7 +365,7 @@ def get_supabase_client() -> Client:
     global _supabase_client
 
     if _supabase_client is None:
-        from config.settings import get_settings
+        from src.config.settings import get_settings
 
         settings = get_settings()
 

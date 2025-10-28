@@ -1,0 +1,57 @@
+services:
+  whatsapp-bot:
+    image: whatsapp-bot-langchain:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: whatsapp-bot-local
+    restart: unless-stopped
+
+    # Usar arquivo .env local
+    env_file:
+      - .env
+
+    # Volumes
+    volumes:
+      - ./credentials.json:/app/credentials.json:ro
+      - ./token.json:/app/token.json
+      - ./logs:/app/logs
+
+    # Portas
+    ports:
+      - "8000:8000"
+
+    # Dependências
+    depends_on:
+      redis:
+        condition: service_healthy
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis para teste local
+  redis:
+    image: redis:7-alpine
+    container_name: whatsapp-bot-redis-local
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    # Não expor porta para evitar conflito
+    # ports:
+    #   - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+# Volumes
+volumes:
+  redis-data:
+    driver: local

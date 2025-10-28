@@ -1,156 +1,80 @@
-# ⚡ Quick Start - WhatsApp Bot LangGraph
+# ⚡ QUICK START - Deploy Rápido no Hetzner
 
-Guia rápido para começar em 5 minutos!
+## 🚀 Deploy em 5 Minutos
 
----
-
-## 🎯 Configuração Rápida
-
-### 1️⃣ Instalar Dependências (1 min)
+### 1️⃣ Preparar Localmente (2 min)
 
 ```bash
-# Ativar ambiente virtual
-venv\Scripts\activate
+# Clonar/baixar projeto
+cd "caminho-do-projeto"
 
-# Instalar dependências
-pip install -r requirements.txt
+# Copiar e configurar .env
+cp .env.production .env
+# Editar .env com suas credenciais
+
+# Garantir que credentials.json existe
+ls credentials.json
 ```
 
-### 2️⃣ Configurar Ambiente (2 min)
+### 2️⃣ Enviar para Servidor (1 min)
+
+**Opção A - Via Git:**
+```bash
+git init
+git add .
+git commit -m "Deploy WhatsApp Bot"
+git push origin main
+```
+
+**Opção B - Via SCP:**
+```bash
+tar -czf bot.tar.gz .
+scp bot.tar.gz root@SEU-IP-HETZNER:/opt/
+```
+
+### 3️⃣ No Servidor Hetzner (1 min)
 
 ```bash
-# Copiar template
-cp .env.example .env
+ssh root@SEU-IP-HETZNER
+cd /opt/whatsapp-bot  # ou descompactar bot.tar.gz
 ```
 
-Edite `.env` e preencha **APENAS** o essencial:
+### 4️⃣ Portainer (1 min)
 
-```env
-# Obrigatório
-OPENAI_API_KEY=sk-proj-xxx
-SUPABASE_URL=https://xxx.supabase.co
-SUPABASE_KEY=eyJxxx
-REDIS_HOST=localhost
-WHATSAPP_API_URL=https://sua-evolution-api.com
-WHATSAPP_API_KEY=sua-key
-WHATSAPP_INSTANCE=sua-instancia
-POSTGRES_CONNECTION_STRING=postgresql://user:pass@localhost:5432/db
-SECRET_KEY=your-secret-key-here
-```
+1. Abra Portainer
+2. **Stacks** → **Add stack**
+3. Nome: `whatsapp-bot`
+4. Cole o conteúdo de `docker-compose.yml`
+5. **Environment variables** → Cole conteúdo de `.env`
+6. **Deploy!**
 
-### 3️⃣ Iniciar Redis (30 segundos)
+---
+
+## ✅ Verificações
 
 ```bash
-# Opção 1: Docker
-docker run -d -p 6379:6379 redis
+# 1. Health Check
+curl https://bot.seu-dominio.com/health
 
-# Opção 2: Local (se já instalado)
-redis-server
-```
+# 2. Logs
+docker logs -f whatsapp-bot
 
-### 4️⃣ Testar Configuração (30 segundos)
-
-```bash
-python -c "from src.config.settings import get_settings; print('✅ OK!')"
-```
-
-### 5️⃣ Executar Bot (30 segundos)
-
-```bash
-python src/main.py
+# 3. Testar
+# Envie mensagem WhatsApp para o bot
 ```
 
 ---
 
-## 📱 Teste Rápido
+## 📝 Credenciais Necessárias
 
-### Teste Google Calendar
-
-```bash
-python test_google_calendar.py
-```
-
-**Na primeira execução:**
-1. Um navegador abrirá
-2. Faça login no Google
-3. Autorize o aplicativo
-4. Pronto! `token.json` criado
+- [ ] WHATSAPP_API_KEY
+- [ ] OPENAI_API_KEY
+- [ ] SUPABASE_KEY
+- [ ] POSTGRES_CONNECTION_STRING
+- [ ] SECRET_KEY
+- [ ] credentials.json
+- [ ] DNS configurado
 
 ---
 
-## 🗂️ Arquivos Principais
-
-| Arquivo | Descrição |
-|---------|-----------|
-| `.env` | Suas configurações (criar do .env.example) |
-| `requirements.txt` | Dependências Python |
-| `src/config/settings.py` | Configurações validadas |
-| `src/models/state.py` | Estado do agente LangGraph |
-| `src/tools/scheduling.py` | Ferramenta de agendamento |
-
----
-
-## 📖 Documentação
-
-- **Instalação Completa**: `INSTALLATION.md`
-- **README Principal**: `README.md`
-- **Google Calendar**: `GOOGLE_CALENDAR_SETUP.md`
-- **Status do Projeto**: `PROJECT_SETUP_COMPLETE.md`
-
----
-
-## 🐛 Problemas Comuns
-
-### "ModuleNotFoundError: No module named 'src'"
-
-```bash
-export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-```
-
-### "Redis connection refused"
-
-```bash
-# Verifique se está rodando
-redis-cli ping
-
-# Se não, inicie
-docker start redis
-```
-
-### "OpenAI API key not found"
-
-Verifique se `.env` foi criado e OPENAI_API_KEY está preenchido.
-
----
-
-## ✅ Checklist Mínimo
-
-- [ ] Python 3.11+ instalado
-- [ ] `venv` ativado
-- [ ] `pip install -r requirements.txt` executado
-- [ ] `.env` criado e preenchido
-- [ ] Redis rodando
-- [ ] Teste passou: `python -c "from src.config.settings import get_settings; print('OK')"`
-
----
-
-## 🚀 Próximos Passos
-
-1. **Configurar Google Calendar** → `GOOGLE_CALENDAR_SETUP.md`
-2. **Configurar Supabase** → Criar tabelas (SQL no `INSTALLATION.md`)
-3. **Implementar Nodes** → Seguir roadmap no `README.md`
-4. **Testar Webhook** → Configurar Evolution API
-
----
-
-## 🆘 Ajuda
-
-- **Instalação Detalhada**: `INSTALLATION.md`
-- **Troubleshooting**: Seção de problemas no `INSTALLATION.md`
-- **Arquitetura**: Diagramas no `README.md`
-
----
-
-**Tempo estimado de setup**: ⏱️ 5-10 minutos
-
-**Pronto para começar!** 🎉
+**Total: ~5 minutos! 🎉**

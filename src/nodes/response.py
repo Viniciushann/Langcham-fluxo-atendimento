@@ -224,25 +224,22 @@ def fragmentar_resposta(state: AgentState) -> AgentState:
 
 def limpar_mensagem(texto: str) -> str:
     """
-    Remove ou escapa caracteres que podem quebrar o JSON/WhatsApp.
+    Normaliza quebras de linha e remove caracteres problemáticos.
 
-    Caracteres tratados:
-    - Barra invertida (\\) -> escapada
-    - Aspas duplas (") -> escapadas
-    - Quebras de linha (\\n) -> escapadas
-    - Asteriscos (*) -> escapados (markdown)
-    - Underscores (_) -> escapados (markdown)
-    - Hashtags (#) -> removidas
+    Operações realizadas:
+    - Normaliza quebras de linha Windows (\\r\\n) para Unix (\\n)
+    - Normaliza quebras de linha Mac (\\r) para Unix (\\n)
+    - Substitui tabs (\\t) por espaços
 
     Args:
         texto: Texto a ser limpo
 
     Returns:
-        str: Texto limpo e escapado
+        str: Texto normalizado
 
     Example:
-        >>> limpar_mensagem('Teste "aspas" e \\n quebra')
-        'Teste \\"aspas\\" e \\\\n quebra'
+        >>> limpar_mensagem('Teste\\r\\ncom\\tquebras')
+        'Teste\\ncom quebras'
     """
     if not texto:
         return ""
@@ -250,13 +247,8 @@ def limpar_mensagem(texto: str) -> str:
     # Sequência de limpeza (ordem importa!)
     texto_limpo = (
         texto
-        .replace('\\', '\\\\')   # Escapar barras primeiro
-        .replace('"', '\\"')     # Escapar aspas
-        .replace('\n', '\\n')    # Escapar quebras de linha
-        .replace('\r', '')       # Remover carriage return
-        .replace('*', '\\*')     # Escapar asteriscos
-        .replace('_', '\\_')     # Escapar underscores
-        .replace('#', '')        # Remover hashtags
+        .replace('\r\n', '\n')   # Normalizar quebras de linha Windows
+        .replace('\r', '\n')     # Normalizar quebras de linha Mac
         .replace('\t', ' ')      # Substituir tabs por espaços
     )
 

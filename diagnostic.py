@@ -3,6 +3,7 @@ import asyncio
 import sys
 import json
 from datetime import datetime
+from typing import cast
 
 # Redirect para arquivo
 log_file = open("diagnostic_log.txt", "w", encoding="utf-8")
@@ -31,6 +32,8 @@ async def main():
         print("   OK - Grafo criado")
 
         print("\n4. Criando estado de teste...")
+        from src.models.state import AgentState
+
         webhook_test = {
             "event": "messages.upsert",
             "data": {
@@ -47,7 +50,7 @@ async def main():
             }
         }
 
-        estado = {
+        estado: AgentState = {
             "raw_webhook_data": {"body": webhook_test},
             "next_action": ""
         }

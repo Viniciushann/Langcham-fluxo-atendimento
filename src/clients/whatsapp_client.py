@@ -114,6 +114,14 @@ class WhatsAppClient:
                 last_exception = e
                 attempt_num = attempt + 1
 
+                # Tentar logar o corpo da resposta de erro
+                try:
+                    if hasattr(e, 'response') and e.response is not None:
+                        error_body = e.response.text
+                        logger.error(f"Resposta de erro da API: {error_body}")
+                except:
+                    pass
+
                 if attempt_num < self.max_retries:
                     # Exponential backoff: 1s, 2s, 4s
                     delay = self.retry_delay * (2 ** attempt)
@@ -156,9 +164,11 @@ class WhatsAppClient:
             raise ValueError("message_id não pode estar vazio")
 
         try:
-            url = f"{self.base_url}/message/media-base64/{quote_plus(self.instance)}/{message_id}"
+            # URL encode do message_id também (pode conter caracteres especiais)
+            url = f"{self.base_url}/message/media-base64/{quote_plus(self.instance)}/{quote_plus(message_id)}"
 
             logger.info(f"Obtendo mídia: {message_id}")
+            logger.debug(f"URL de mídia: {url}")
 
             response = await self._request_with_retry("GET", url)
             data = response.json()
@@ -167,6 +177,14 @@ class WhatsAppClient:
 
             return data
 
+        except HTTPError as e:
+            # Verificar se é 404 (mídia não encontrada ou expirada)
+            if e.response and e.response.status_code == 404:
+                logger.error(f"Mídia não encontrada (404) para message_id: {message_id}. A mídia pode ter expirado.")
+                raise ValueError(f"Mídia não encontrada ou expirada para message_id: {message_id}")
+            else:
+                logger.error(f"Erro HTTP ao obter mídia {message_id}: {e}", exc_info=True)
+                raise
         except Exception as e:
             logger.error(f"Erro ao obter mídia {message_id}: {e}", exc_info=True)
             raise
@@ -245,11 +263,14 @@ class WhatsAppClient:
             raise ValueError("telefone não pode estar vazio")
 
         try:
-            url = f"{self.base_url}/chat/presence/{self.instance}"
+            url = f"{self.base_url}/chat/sendPresence/{self.instance}"
 
             payload = {
                 "number": telefone,
-                "presence": "composing"
+                "options": {
+                    "delay": 1200,
+                    "presence": "composing"
+                }
             }
 
             logger.debug(f"Enviando status 'digitando' para: {telefone}")
@@ -273,11 +294,14 @@ class WhatsAppClient:
             >>> await client.enviar_status_available("5562999999999")
         """
         try:
-            url = f"{self.base_url}/chat/presence/{self.instance}"
+            url = f"{self.base_url}/chat/sendPresence/{self.instance}"
 
             payload = {
                 "number": telefone,
-                "presence": "available"
+                "options": {
+                    "delay": 1200,
+                    "presence": "available"
+                }
             }
 
             await self._request_with_retry("POST", url, json=payload)

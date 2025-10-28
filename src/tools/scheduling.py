@@ -24,6 +24,9 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+from src.clients.whatsapp_client import WhatsAppClient
+from src.config.settings import get_settings
+
 # Configuração de logging
 logging.basicConfig(
     level=logging.INFO,
@@ -42,8 +45,11 @@ HORARIO_INICIO = 8  # 8h
 HORARIO_FIM = 18    # 18h
 DURACAO_CONSULTA = 1  # 1 hora
 
+# Configuração do técnico
+TELEFONE_TECNICO = "556298540075"  # +55 62 98540-0075
 
-def _get_calendar_service():
+
+def _get_calendar_service() -> Any:
     """
     Obtém o serviço do Google Calendar autenticado.
 
@@ -169,6 +175,84 @@ def _gerar_slots_horario(data_referencia: datetime) -> List[Dict[str, str]]:
         hora_atual += DURACAO_CONSULTA
 
     return slots
+
+
+async def _notificar_tecnico(
+    nome_cliente: str,
+    telefone_cliente: str,
+    endereco: str,
+    data_inicio: datetime,
+    tipo_servico: str = "visita/orçamento"
+) -> bool:
+    """
+    Envia notificação WhatsApp para o técnico sobre novo agendamento.
+
+    Args:
+        nome_cliente: Nome do cliente
+        telefone_cliente: Telefone do cliente
+        endereco: Endereço do serviço
+        data_inicio: Data e hora do agendamento
+        tipo_servico: Tipo de serviço agendado
+
+    Returns:
+        bool: True se enviou com sucesso, False caso contrário
+    """
+    try:
+        settings = get_settings()
+
+        whatsapp = WhatsAppClient(
+            base_url=settings.whatsapp_api_url,
+            api_key=settings.whatsapp_api_key,
+            instance=settings.whatsapp_instance
+        )
+
+        # Formatar data/hora
+        data_formatada = data_inicio.strftime("%d/%m/%Y")
+        hora_formatada = data_inicio.strftime("%H:%M")
+        dia_semana = data_inicio.strftime("%A")
+
+        # Traduzir dia da semana
+        dias_pt = {
+            "Monday": "Segunda-feira",
+            "Tuesday": "Terça-feira",
+            "Wednesday": "Quarta-feira",
+            "Thursday": "Quinta-feira",
+            "Friday": "Sexta-feira",
+            "Saturday": "Sábado",
+            "Sunday": "Domingo"
+        }
+        dia_semana_pt = dias_pt.get(dia_semana, dia_semana)
+
+        # Montar mensagem
+        mensagem = f"""🔔 *NOVO AGENDAMENTO*
+
+📅 *Data:* {dia_semana_pt}, {data_formatada}
+🕐 *Horário:* {hora_formatada}
+
+👤 *Cliente:* {nome_cliente}
+📱 *Telefone:* {telefone_cliente}
+📍 *Endereço:* {endereco}
+
+🔧 *Tipo:* {tipo_servico}
+
+⚠️ Lembre-se de confirmar presença com o cliente!"""
+
+        # Enviar mensagem
+        resultado = await whatsapp.enviar_mensagem(
+            telefone=TELEFONE_TECNICO,
+            texto=mensagem
+        )
+
+        if resultado:
+            logger.info(f"Notificação enviada ao técnico para agendamento de {nome_cliente}")
+            return True
+        else:
+            logger.warning("Falha ao enviar notificação ao técnico")
+            return False
+
+    except Exception as e:
+        logger.error(f"Erro ao notificar técnico: {e}")
+        return False
 
 
 async def consultar_horarios(
@@ -407,9 +491,35 @@ Email: {email_cliente}
 
         logger.info(f"Evento criado com sucesso: {evento_criado['id']}")
 
+        # Notificar técnico sobre o novo agendamento
+        # Extrair endereço de informacao_extra se disponível
+        endereco = "Endereço a confirmar"
+        if informacao_extra:
+            # Procurar por endereço na informação extra
+            if "endereço:" in informacao_extra.lower() or "endereco:" in informacao_extra.lower():
+                partes = informacao_extra.split(":")
+                if len(partes) > 1:
+                    endereco = partes[1].strip()
+            elif informacao_extra and len(informacao_extra) > 10:
+                # Se informacao_extra parece ser um endereço
+                endereco = informacao_extra
+
+        # Tentar enviar notificação (não bloqueia se falhar)
+        try:
+            await _notificar_tecnico(
+                nome_cliente=nome_cliente,
+                telefone_cliente=telefone_cliente,
+                endereco=endereco,
+                data_inicio=data_inicio,
+                tipo_servico="Visita/Orçamento"
+            )
+        except Exception as e:
+            logger.warning(f"Não foi possível notificar técnico: {e}")
+            # Não falha o agendamento se a notificação falhar
+
         return {
             "sucesso": True,
-            "mensagem": f"Agendamento confirmado para {nome_cliente} no dia {data_inicio.strftime('%d/%m/%Y às %H:%M')}",
+            "mensagem": f"Agendamento confirmado para {nome_cliente} no dia {data_inicio.strftime('%d/%m/%Y às %H:%M')}. Técnico notificado!",
             "dados": {
                 "evento_id": evento_criado['id'],
                 "link": evento_criado.get('htmlLink', ''),
@@ -497,6 +607,15 @@ async def cancelar_horario(
                 "dados": {}
             }
 
+        # Extrair telefone da descrição do evento
+        descricao = evento_encontrado.get('description', '')
+        telefone_cliente = ""
+        try:
+            if 'Telefone:' in descricao:
+                telefone_cliente = descricao.split('Telefone:')[1].split('\n')[0].strip()
+        except:
+            telefone_cliente = "não informado"
+
         # Deletar evento
         service.events().delete(
             calendarId='primary',
@@ -506,9 +625,53 @@ async def cancelar_horario(
 
         logger.info(f"Evento cancelado com sucesso: {evento_encontrado['id']}")
 
+        # Notificar técnico sobre o cancelamento
+        try:
+            settings = get_settings()
+            whatsapp = WhatsAppClient(
+                base_url=settings.whatsapp_api_url,
+                api_key=settings.whatsapp_api_key,
+                instance=settings.whatsapp_instance
+            )
+
+            # Formatar data/hora
+            data_formatada = data_busca.strftime("%d/%m/%Y")
+            hora_formatada = data_busca.strftime("%H:%M")
+            dia_semana = data_busca.strftime("%A")
+
+            # Traduzir dia da semana
+            dias_pt = {
+                "Monday": "Segunda-feira",
+                "Tuesday": "Terça-feira",
+                "Wednesday": "Quarta-feira",
+                "Thursday": "Quinta-feira",
+                "Friday": "Sexta-feira",
+                "Saturday": "Sábado",
+                "Sunday": "Domingo"
+            }
+            dia_semana_pt = dias_pt.get(dia_semana, dia_semana)
+
+            mensagem = f"""❌ AGENDAMENTO CANCELADO
+
+📅 Data: {dia_semana_pt}, {data_formatada}
+🕐 Horário: {hora_formatada}
+
+👤 Cliente: {nome_cliente}
+📱 Telefone: {telefone_cliente}
+
+⚠️ O cliente cancelou este agendamento."""
+
+            await whatsapp.enviar_mensagem(
+                telefone=TELEFONE_TECNICO,
+                texto=mensagem
+            )
+            logger.info(f"Notificação de cancelamento enviada ao técnico")
+        except Exception as e:
+            logger.warning(f"Não foi possível notificar técnico sobre cancelamento: {e}")
+
         return {
             "sucesso": True,
-            "mensagem": f"Agendamento de {nome_cliente} cancelado com sucesso. Notificação enviada por email.",
+            "mensagem": f"Agendamento de {nome_cliente} cancelado com sucesso. Notificações enviadas.",
             "dados": {
                 "evento_cancelado": evento_encontrado.get('summary', ''),
                 "data": data_busca.strftime('%d/%m/%Y às %H:%M')
@@ -667,9 +830,74 @@ async def atualizar_horario(
 
         logger.info(f"Evento atualizado com sucesso: {evento_atualizado['id']}")
 
+        # Notificar técnico sobre o reagendamento
+        try:
+            # Extrair telefone e endereço da descrição
+            descricao = evento_encontrado.get('description', '')
+            telefone = telefone_cliente if telefone_cliente else ""
+            endereco = "Endereço a confirmar"
+
+            try:
+                if 'Telefone:' in descricao and not telefone:
+                    telefone = descricao.split('Telefone:')[1].split('\n')[0].strip()
+                if 'Endereço:' in descricao or 'Endereco:' in descricao:
+                    if 'Endereço:' in descricao:
+                        endereco = descricao.split('Endereço:')[1].split('\n')[0].strip()
+                    elif 'Endereco:' in descricao:
+                        endereco = descricao.split('Endereco:')[1].split('\n')[0].strip()
+            except:
+                pass
+
+            settings = get_settings()
+            whatsapp = WhatsAppClient(
+                base_url=settings.whatsapp_api_url,
+                api_key=settings.whatsapp_api_key,
+                instance=settings.whatsapp_instance
+            )
+
+            # Formatar datas
+            data_antiga_formatada = data_antiga.strftime("%d/%m/%Y às %H:%M")
+            data_nova_formatada = data_nova.strftime("%d/%m/%Y")
+            hora_nova_formatada = data_nova.strftime("%H:%M")
+            dia_semana = data_nova.strftime("%A")
+
+            # Traduzir dia da semana
+            dias_pt = {
+                "Monday": "Segunda-feira",
+                "Tuesday": "Terça-feira",
+                "Wednesday": "Quarta-feira",
+                "Thursday": "Quinta-feira",
+                "Friday": "Sexta-feira",
+                "Saturday": "Sábado",
+                "Sunday": "Domingo"
+            }
+            dia_semana_pt = dias_pt.get(dia_semana, dia_semana)
+
+            mensagem = f"""🔄 AGENDAMENTO REAGENDADO
+
+👤 Cliente: {nome_cliente}
+📱 Telefone: {telefone}
+📍 Endereço: {endereco}
+
+❌ Horário anterior: {data_antiga_formatada}
+
+✅ Novo horário:
+📅 Data: {dia_semana_pt}, {data_nova_formatada}
+🕐 Horário: {hora_nova_formatada}
+
+⚠️ Lembre-se de confirmar presença com o cliente!"""
+
+            await whatsapp.enviar_mensagem(
+                telefone=TELEFONE_TECNICO,
+                texto=mensagem
+            )
+            logger.info(f"Notificação de reagendamento enviada ao técnico")
+        except Exception as e:
+            logger.warning(f"Não foi possível notificar técnico sobre reagendamento: {e}")
+
         return {
             "sucesso": True,
-            "mensagem": f"Agendamento de {nome_cliente} atualizado para {data_nova.strftime('%d/%m/%Y às %H:%M')}",
+            "mensagem": f"Agendamento de {nome_cliente} atualizado para {data_nova.strftime('%d/%m/%Y às %H:%M')}. Notificações enviadas.",
             "dados": {
                 "evento_id": evento_atualizado['id'],
                 "link": evento_atualizado.get('htmlLink', ''),

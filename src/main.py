@@ -133,7 +133,23 @@ async def webhook_whatsapp(
         logger.info("📨 Webhook recebido!")
         logger.info(f"Event: {webhook_data.get('event', 'unknown')}")
         logger.info(f"Instance: {webhook_data.get('instance', 'unknown')}")
-        
+
+        # DEBUG: Verificar se base64 está presente
+        data = webhook_data.get("data", {})
+        message = data.get("message", {})
+        message_type = data.get("messageType", "")
+
+        if message_type == "audioMessage" and "audioMessage" in message:
+            audio = message["audioMessage"]
+            has_base64 = "base64" in audio or "media" in audio
+            logger.info(f"🎵 AUDIO DETECTADO - Base64 presente: {has_base64}")
+            if has_base64:
+                base64_key = "base64" if "base64" in audio else "media"
+                logger.info(f"✅ Base64 encontrado em audioMessage.{base64_key} (tamanho: {len(audio[base64_key])} chars)")
+            else:
+                logger.warning("⚠️ Base64 NAO encontrado no audioMessage!")
+                logger.info(f"Keys disponiveis em audioMessage: {list(audio.keys())}")
+
         # Filtrar apenas eventos de mensagem
         event = webhook_data.get("event", "")
         if event != "messages.upsert":
@@ -159,16 +175,20 @@ async def webhook_whatsapp(
             "next_action": ""
         }
 
-        # Processar em background
+        # Processar em background (não bloqueia a resposta)
         background_tasks.add_task(processar_mensagem, initial_state)
-        
-        logger.info("🚀 Mensagem adicionada à fila de processamento")
-        
-        return {
-            "status": "received",
-            "message": "Webhook received and queued for processing",
-            "timestamp": datetime.now().isoformat()
-        }
+
+        logger.info("✅ Mensagem adicionada à fila de processamento - respondendo imediatamente")
+
+        # IMPORTANTE: Retornar imediatamente para evitar timeout do ngrok/túnel
+        return JSONResponse(
+            status_code=200,
+            content={
+                "status": "received",
+                "message": "Webhook received and queued for processing",
+                "timestamp": datetime.now().isoformat()
+            }
+        )
         
     except json.JSONDecodeError:
         logger.error("❌ JSON inválido no webhook")
@@ -246,6 +266,61 @@ async def get_status():
         },
         "timestamp": datetime.now().isoformat()
     }
+
+
+@app.post("/webhook/debug")
+async def webhook_debug(request: Request):
+    """
+    Endpoint de DEBUG para capturar e salvar webhooks completos.
+
+    Use este endpoint temporariamente para analisar a estrutura
+    dos webhooks e verificar se o base64 está presente.
+    """
+    try:
+        webhook_data = await request.json()
+
+        # Salvar webhook em arquivo JSON
+        filename = f"webhook_debug_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(webhook_data, f, indent=2, ensure_ascii=False)
+
+        logger.info(f"[DEBUG] Webhook salvo em: {filename}")
+
+        # Análise rápida
+        data = webhook_data.get("data", {})
+        message = data.get("message", {})
+        message_type = data.get("messageType", "")
+
+        analysis = {
+            "saved_to": filename,
+            "event": webhook_data.get("event", "unknown"),
+            "message_type": message_type,
+            "message_keys": list(message.keys()),
+        }
+
+        # Verificar base64 em áudio
+        if message_type == "audioMessage" and "audioMessage" in message:
+            audio = message["audioMessage"]
+            analysis["audio_keys"] = list(audio.keys())
+            analysis["has_base64"] = "base64" in audio or "media" in audio
+
+            if analysis["has_base64"]:
+                base64_key = "base64" if "base64" in audio else "media"
+                analysis["base64_location"] = f"audioMessage.{base64_key}"
+                analysis["base64_size"] = len(audio[base64_key])
+
+        logger.info(f"[DEBUG] Analise: {analysis}")
+
+        return {
+            "status": "saved",
+            "analysis": analysis,
+            "timestamp": datetime.now().isoformat()
+        }
+
+    except Exception as e:
+        logger.error(f"[DEBUG] Erro: {e}", exc_info=True)
+        return {"status": "error", "error": str(e)}
 
 
 if __name__ == "__main__":

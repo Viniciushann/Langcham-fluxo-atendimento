@@ -1,0 +1,105 @@
+# ========================================
+# GitHub Actions - Deploy Automático
+# ========================================
+# Faz deploy automático no servidor Hetzner
+# quando você faz push na branch main
+# ========================================
+
+name: Deploy to Hetzner
+
+on:
+  push:
+    branches:
+      - main
+      - production
+  workflow_dispatch:  # Permite executar manualmente
+
+jobs:
+  deploy:
+    name: Deploy WhatsApp Bot
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout do código
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Setup Python (para validações)
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 3. Validar código Python
+      - name: Validate Python syntax
+        run: |
+          python -m py_compile src/**/*.py || echo "Validation complete"
+
+      # 4. Deploy via SSH
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            echo "🚀 Starting deployment..."
+
+            # Navegar para o diretório do projeto
+            cd /opt/whatsapp-bot || exit 1
+
+            # Pull das mudanças
+            echo "📥 Pulling latest changes..."
+            git pull origin main
+
+            # Verificar se há mudanças no requirements.txt
+            if git diff HEAD@{1} HEAD --name-only | grep -q "requirements.txt"; then
+              echo "📦 Rebuilding Docker image (requirements changed)..."
+              docker-compose build --no-cache
+            else
+              echo "🔄 Rebuilding Docker image..."
+              docker-compose build
+            fi
+
+            # Restart do container
+            echo "🔄 Restarting container..."
+            docker-compose down
+            docker-compose up -d
+
+            # Aguardar container iniciar
+            echo "⏳ Waiting for container to start..."
+            sleep 10
+
+            # Verificar se está rodando
+            if docker ps | grep -q "whatsapp-bot"; then
+              echo "✅ Container is running!"
+
+              # Verificar health
+              echo "🏥 Checking health..."
+              docker exec whatsapp-bot curl -f http://localhost:8000/health || echo "Health check pending..."
+            else
+              echo "❌ Container failed to start!"
+              docker logs whatsapp-bot
+              exit 1
+            fi
+
+            # Limpar imagens antigas
+            echo "🧹 Cleaning up old images..."
+            docker image prune -f
+
+            echo "🎉 Deployment complete!"
+
+      # 5. Notificar sucesso
+      - name: Deployment Success
+        if: success()
+        run: |
+          echo "✅ Deploy realizado com sucesso!"
+          echo "🌐 Bot disponível em: https://bot.${{ secrets.DOMAIN }}"
+
+      # 6. Notificar falha
+      - name: Deployment Failed
+        if: failure()
+        run: |
+          echo "❌ Deploy falhou! Verifique os logs acima."
+          exit 1

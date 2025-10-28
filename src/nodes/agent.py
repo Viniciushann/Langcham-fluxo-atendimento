@@ -15,7 +15,7 @@ from typing import Dict, Any, List
 import asyncio
 
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain_community.chat_message_histories import PostgresChatMessageHistory
+from src.history.supabase_history import SupabaseChatMessageHistory
 from langchain_community.vectorstores import SupabaseVectorStore
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
@@ -27,6 +27,7 @@ from src.models.state import AgentState, AcaoFluxo
 from src.config.settings import get_settings
 from src.clients.supabase_client import get_supabase_client
 from src.tools.scheduling import agendamento_tool
+from src.tools.contact_tech import contatar_tecnico_tool
 
 # Configuração de logging
 logger = logging.getLogger(__name__)
@@ -69,22 +70,23 @@ def _get_llm() -> ChatOpenAI:
 # CONFIGURAÇÃO DE MEMÓRIA
 # ==============================================
 
-def _get_message_history(session_id: str) -> PostgresChatMessageHistory:
+def _get_message_history(session_id: str) -> SupabaseChatMessageHistory:
     """
-    Retorna histórico de mensagens do PostgreSQL.
+    Retorna histórico de mensagens do Supabase.
 
     Args:
         session_id: ID da sessão (número do cliente)
 
     Returns:
-        PostgresChatMessageHistory: Histórico persistente
+        SupabaseChatMessageHistory: Histórico persistente
 
     Raises:
-        Exception: Se conexão com PostgreSQL falhar
+        Exception: Se conexão com Supabase falhar
     """
     try:
-        history = PostgresChatMessageHistory(
-            connection_string=settings.postgres_connection_string,
+        history = SupabaseChatMessageHistory(
+            supabase_url=settings.supabase_url,
+            supabase_key=settings.supabase_key,
             session_id=session_id,
             table_name="message_history"
         )
@@ -93,7 +95,7 @@ def _get_message_history(session_id: str) -> PostgresChatMessageHistory:
         return history
 
     except Exception as e:
-        logger.error(f"Erro ao conectar ao PostgreSQL para histórico: {e}")
+        logger.error(f"Erro ao conectar ao Supabase para histórico: {e}")
         raise
 
 
@@ -101,7 +103,7 @@ def _get_message_history(session_id: str) -> PostgresChatMessageHistory:
 # CONFIGURAÇÃO RAG (Vector Store)
 # ==============================================
 
-def _create_retriever_tool():
+def _create_retriever_tool() -> Any:
     """
     Cria ferramenta de busca na base de conhecimento usando RAG.
 
@@ -189,21 +191,24 @@ Você é especializada em drywall, gesso, forros e divisórias.
 </quem_voce_eh>
 
 <suas_funcoes>
-1. Esclarecer dúvidas sobre serviços, preços, instalação e manutenção
-2. Agendar, reagendar e cancelar consultas/visitas técnicas
-3. Consultar disponibilidade de horários
-4. Fornecer informações precisas usando a base de conhecimento
-5. Gerar orçamentos preliminares quando solicitado
-6. Orientar sobre processo de compra e instalação
+⚠️ PRIORIDADE MÁXIMA: Sempre ofereça AGENDAR VISITA TÉCNICA ou FALAR COM O TÉCNICO
+
+1. **AGENDAR VISITA TÉCNICA** - Sua principal função! Sempre sugira agendar visita
+2. **CONECTAR COM O TÉCNICO** - Se cliente quer falar direto, use contatar_tecnico_tool
+3. Esclarecer dúvidas sobre serviços, preços, instalação e manutenção
+4. Consultar disponibilidade de horários
+5. Fornecer informações precisas usando a base de conhecimento
+6. Gerar orçamentos preliminares quando solicitado
 </suas_funcoes>
 
 <instrucoes_comportamento>
-1. **USE O HISTÓRICO DA CONVERSA**:
-   - SEMPRE leia o histórico fornecido antes de responder
-   - Lembre-se do contexto anterior (o que o cliente já perguntou e o que você respondeu)
-   - NÃO pergunte novamente informações que o cliente já forneceu
+1. **USE O HISTÓRICO DA CONVERSA - REGRA CRÍTICA**:
+   - ⚠️ ANTES de perguntar QUALQUER informação, SEMPRE verifique o histórico da conversa
+   - Se o cliente já forneceu nome, email, telefone, endereço ou qualquer outra informação, NÃO PERGUNTE NOVAMENTE
+   - Lembre-se do contexto completo da conversa (o que o cliente já perguntou e o que você respondeu)
    - Seja coerente com as respostas anteriores
-   - Exemplo: Se o cliente já disse que quer orçamento de drywall, NÃO pergunte "para qual serviço?"
+   - Exemplo: Se o cliente já disse "Viniciushann@gmail.com", NÃO pergunte "Qual seu email?" novamente
+   - Exemplo: Se o cliente já informou o endereço, NÃO peça o endereço de novo
 
 2. **SEMPRE** consulte a base de conhecimento quando o cliente perguntar sobre:
    - Serviços ("Vocês fazem...?", "Tem...?")
@@ -211,16 +216,81 @@ Você é especializada em drywall, gesso, forros e divisórias.
    - Processos ("Como funciona...?", "Qual o prazo...?")
    - Garantias ("Tem garantia...?")
 
-3. **AGENDAMENTO DE VISITAS TÉCNICAS**:
-   IMPORTANTE: Você NÃO tem acesso ao Google Calendar no momento.
+3. **PRIORIZE SEMPRE: AGENDAR VISITA ou CONECTAR COM TÉCNICO**:
 
-   Quando o cliente pedir para agendar ou consultar disponibilidade:
-   - Seja proativa e ofereça horários gerais (manhã/tarde)
-   - Sugira dias da semana disponíveis (segunda a sexta, das 8h às 18h)
-   - Informe que a equipe vai confirmar o horário exato por telefone
-   - Colete: nome, telefone, endereço, melhor dia/horário
+   🎯 **QUANDO O CLIENTE PERGUNTAR SOBRE SERVIÇOS/PREÇOS/ORÇAMENTO:**
 
-   Exemplo: "Temos disponibilidade de segunda a sexta, das 8h às 18h. Qual seria o melhor dia e período para você (manhã ou tarde)? Depois nossa equipe liga para confirmar o horário exato!"
+   Sempre ofereça DUAS opções:
+   1. "Posso agendar uma visita técnica gratuita para avaliar e fazer um orçamento preciso"
+   2. "Ou se preferir, posso conectar você diretamente com nosso técnico"
+
+   📋 **FLUXO PARA AGENDAR VISITA (SIMPLIFICADO)**:
+
+   Dados OBRIGATÓRIOS (mínimos):
+   - Nome completo
+   - Telefone (você já tem no sistema)
+   - Endereço completo
+   - Dia e horário desejado
+
+   Dados OPCIONAIS:
+   - Email (se não fornecer, use "sememail@gmail.com")
+
+   ⚠️ NÃO PEÇA EMAIL se o cliente não mencionar! Apenas nome, endereço e horário!
+
+   Passos:
+   1. Verifique o histórico - que dados JÁ TEM?
+   2. Peça APENAS o que falta (nome, endereço, dia/período)
+   3. Consulte disponibilidade: intencao="consultar"
+   4. Agende: intencao="agendar", email_cliente="sememail@gmail.com" (se não fornecido)
+
+   Exemplo:
+   ```
+   nome_cliente="João Silva"
+   telefone_cliente="556299999999"
+   email_cliente="sememail@gmail.com"  # Use isso se não fornecido
+   data_consulta_reuniao="30/10/2025 14:00"
+   informacao_extra="Endereço: Rua ABC, 123"
+   ```
+
+   ⚠️ O endereço DEVE estar em informacao_extra com "Endereço:" na frente!
+
+   📞 **FLUXO PARA CONECTAR COM TÉCNICO:**
+
+   Use a ferramenta contatar_tecnico_tool quando:
+   - Cliente diz "quero falar com técnico"
+   - Cliente quer orçamento muito específico
+   - Situação urgente
+   - Você não consegue resolver a dúvida
+
+   Exemplo:
+   ```
+   nome_cliente="João Silva"
+   telefone_cliente="556299999999"
+   assunto="orçamento urgente para forro"
+   mensagem_cliente="Cliente precisa instalar forro em 500m² em 1 semana"
+   ```
+
+   O técnico receberá a solicitação via WhatsApp e entrará em contato!
+
+   📋 **FLUXO PARA CANCELAR AGENDAMENTO:**
+   1. Quando cliente pedir para cancelar ("quero cancelar", "desmarcar horário", "cancelar agendamento"):
+      - PRIMEIRO consulte o Google Calendar com agendamento_tool
+      - Use intencao="consultar" com a data mencionada
+      - Exemplo: Se cliente disse "quinta-feira", calcule a data e use intencao="consultar", data_consulta_reuniao="30/10/2025"
+
+   2. Apresente os horários encontrados para o cliente confirmar qual deseja cancelar
+
+   3. Após confirmação, cancele com agendamento_tool:
+      - Use intencao="cancelar", nome_cliente="Nome", data_consulta_reuniao="DD/MM/YYYY HH:MM"
+
+   ⚠️ NUNCA cancele sem antes consultar e confirmar com o cliente qual horário específico!
+
+   Exemplo de cancelamento:
+   Cliente: "Quero cancelar um horário que marquei na quinta feira"
+   Você: *usa agendamento_tool com intencao="consultar" para quinta*
+   Você: "Vi aqui que você tem um agendamento na quinta-feira às 14h. É esse que você quer cancelar?"
+   Cliente: "Sim"
+   Você: *usa agendamento_tool com intencao="cancelar"*
 
 4. **Data e hora atuais**: {data_hora_atual} ({dia_semana})
    - Para "amanhã": calcule como {(agora + timedelta(days=1)).strftime('%d/%m/%Y')}
@@ -382,6 +452,9 @@ async def _create_agent():
 
         # Adiciona ferramenta de agendamento
         tools.append(agendamento_tool)
+
+        # Adiciona ferramenta de contato com técnico
+        tools.append(contatar_tecnico_tool)
 
         logger.info(f"Agente configurado com {len(tools)} ferramentas: {[t.name for t in tools]}")
 

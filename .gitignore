@@ -1,15 +1,142 @@
-# Arquivos de ambiente e credenciais
+# ========================================
+# .gitignore - WhatsApp Bot
+# ========================================
+
+# ========== CREDENCIAIS E SEGREDOS (CRÍTICO!) ==========
 .env
-*.env
+.env.local
+.env.*.local
 credentials.json
 token.json
+*.pem
+*.key
+*.crt
+*.p12
+service-account*.json
 
-# Python
+# ========== Python ==========
 __pycache__/
 *.py[cod]
-*.class
-.venv/
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ========== Virtual Environments ==========
 venv/
-*.log
-htmlcov/
+ENV/
+env/
+.venv
+env.bak/
+venv.bak/
+
+# ========== IDEs e Editors ==========
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ========== Jupyter Notebook ==========
+.ipynb_checkpoints
+*.ipynb
+
+# ========== Pytest ==========
 .pytest_cache/
+.coverage
+htmlcov/
+*.cover
+.hypothesis/
+
+# ========== Logs ==========
+*.log
+logs/
+bot.log
+diagnostic_log.txt
+*.log.*
+
+# ========== Database ==========
+*.db
+*.sqlite
+*.sqlite3
+
+# ========== Backups ==========
+*.backup
+*.bak
+*.old
+
+# ========== Docker ==========
+docker-compose.override.yml
+
+# ========== Temporary files ==========
+tmp/
+temp/
+*.tmp
+nul
+*.cache
+
+# ========== OS files ==========
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ========== Dados sensíveis ==========
+webhook_debug_*.json
+debug_output.txt
+test_*.py
+simple_server.py
+
+# ========== Build artifacts ==========
+*.pyc
+*.pyo
+*.pyd
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ========== Coverage reports ==========
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+
+# ========== MyPy ==========
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ========== Ruff ==========
+.ruff_cache/
+
+# ========== Documentation builds ==========
+docs/_build/
+
+# ========== Specific project files to ignore ==========
+ngrok_temp/
+notebooks/
+htmlcov/
