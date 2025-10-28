@@ -113,6 +113,14 @@ async def processar_mensagem(state: AgentState):
         logger.error(f"Erro ao processar mensagem: {str(e)}", exc_info=True)
 
 
+@app.get("/webhook/whatsapp")
+async def webhook_whatsapp_get():
+    """
+    Endpoint GET para verificação do webhook pela Evolution API.
+    """
+    return {"status": "ok", "message": "Webhook endpoint is active"}
+
+
 @app.post("/webhook/whatsapp")
 async def webhook_whatsapp(
     request: Request,
@@ -121,7 +129,7 @@ async def webhook_whatsapp(
 ):
     """
     Endpoint principal para receber webhooks da Evolution API.
-    
+
     Este endpoint recebe as mensagens enviadas para o bot via WhatsApp
     e processa em background para não bloquear a resposta.
     """
