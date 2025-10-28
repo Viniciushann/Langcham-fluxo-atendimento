@@ -37,12 +37,12 @@ jobs:
 
       # 4. Deploy via SSH
       - name: Deploy to Server
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SERVER_PORT }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
           script: |
             echo "🚀 Starting deployment..."
 
@@ -69,18 +69,24 @@ jobs:
 
             # Aguardar container iniciar
             echo "⏳ Waiting for container to start..."
-            sleep 10
+            sleep 15
 
             # Verificar se está rodando
-            if docker ps | grep -q "whatsapp-bot"; then
-              echo "✅ Container is running!"
+            CONTAINER_NAME=$(docker ps --filter "name=whatsapp-bot" --format "{{.Names}}" | head -n 1)
+
+            if [ -n "$CONTAINER_NAME" ]; then
+              echo "✅ Container $CONTAINER_NAME is running!"
 
               # Verificar health
               echo "🏥 Checking health..."
-              docker exec whatsapp-bot curl -f http://localhost:8000/health || echo "Health check pending..."
+              curl -f http://localhost:8000/health || echo "⚠️ Health check pending..."
+
+              # Mostrar logs recentes
+              echo "📋 Recent logs:"
+              docker logs $CONTAINER_NAME --tail 10
             else
               echo "❌ Container failed to start!"
-              docker logs whatsapp-bot
+              docker-compose logs --tail 50
               exit 1
             fi
 
