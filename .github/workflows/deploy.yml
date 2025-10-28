@@ -1,18 +1,12 @@
-# ========================================
-# GitHub Actions - Deploy Automático
-# ========================================
-# Faz deploy automático no servidor Hetzner
-# quando você faz push na branch main
-# ========================================
-
 name: Deploy to Hetzner
 
 on:
   push:
-    branches:
-      - main
-      - production
-  workflow_dispatch:  # Permite executar manualmente
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  DEPLOY_PATH: /opt/whatsapp-bot
 
 jobs:
   deploy:
@@ -20,115 +14,83 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout do código
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: 🔑 Configure SSH
+      run: |
+        mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+        ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
 
-      # 2. Setup Python (para validações)
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+    - name: 🚀 Deploy to Server
+      run: |
+        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
+        set -e
 
-      # 3. Validar código Python
-      - name: Validate Python syntax
-        run: |
-          python -m py_compile src/**/*.py || echo "Validation complete"
+        echo "🚀 Starting deployment..."
 
-      # 4. Deploy via SSH
-      - name: Deploy to Server
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-        run: |
-          # Criar diretório SSH
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
+        # Navegar para diretório do projeto
+        cd /opt/whatsapp-bot
 
-          # Salvar chave privada interpretando \n como quebra de linha
-          echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
+        # Atualizar código do Git
+        echo "📥 Pulling latest changes from GitHub..."
+        git fetch --all
+        git reset --hard origin/main
+        git pull origin main
 
-          # Debug: Mostrar estrutura da chave
-          echo "Key file structure:"
-          wc -l ~/.ssh/deploy_key
-          echo "First line:"
-          head -1 ~/.ssh/deploy_key
-          echo "Last line:"
-          tail -1 ~/.ssh/deploy_key
+        # Mostrar commit atual
+        echo "📍 Current commit:"
+        git log -1 --oneline
 
-          # Validar chave
-          ssh-keygen -l -f ~/.ssh/deploy_key || echo "Warning: Key validation failed"
+        # Usar Docker Compose v2 (plugin do Docker)
+        echo "🔨 Building and starting containers..."
+        docker compose down 2>/dev/null || true
+        docker compose build --no-cache
+        docker compose up -d
 
-          # Adicionar host ao known_hosts
-          ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts 2>/dev/null
+        # Aguardar container iniciar
+        echo "⏳ Waiting for container to start..."
+        sleep 15
 
-          # Executar deploy via SSH
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'ENDSSH'
-            echo "🚀 Starting deployment..."
+        # Verificar se container está rodando
+        CONTAINER_NAME=$(docker ps --filter "name=whatsapp-bot" --format "{{.Names}}" | head -n 1)
 
-            # Navegar para o diretório do projeto
-            cd /opt/whatsapp-bot || exit 1
+        if [ -n "$CONTAINER_NAME" ]; then
+          echo "✅ Container $CONTAINER_NAME is running!"
 
-            # Pull das mudanças
-            echo "📥 Pulling latest changes..."
-            git pull origin main
+          # Health check
+          echo "🏥 Checking health..."
+          if curl -f http://localhost:8000/health; then
+            echo "✅ Health check passed!"
+          else
+            echo "⚠️ Health check failed, but container is running"
+          fi
 
-            # Verificar se há mudanças no requirements.txt
-            if git diff HEAD@{1} HEAD --name-only | grep -q "requirements.txt"; then
-              echo "📦 Rebuilding Docker image (requirements changed)..."
-              docker-compose build --no-cache
-            else
-              echo "🔄 Rebuilding Docker image..."
-              docker-compose build
-            fi
+          # Mostrar logs recentes
+          echo "📋 Recent logs:"
+          docker logs $CONTAINER_NAME --tail 15
 
-            # Restart do container
-            echo "🔄 Restarting container..."
-            docker-compose down
-            docker-compose up -d
+          # Limpar imagens antigas
+          echo "🧹 Cleaning up old images..."
+          docker image prune -f
 
-            # Aguardar container iniciar
-            echo "⏳ Waiting for container to start..."
-            sleep 15
-
-            # Verificar se está rodando
-            CONTAINER_NAME=$(docker ps --filter "name=whatsapp-bot" --format "{{.Names}}" | head -n 1)
-
-            if [ -n "$CONTAINER_NAME" ]; then
-              echo "✅ Container $CONTAINER_NAME is running!"
-
-              # Verificar health
-              echo "🏥 Checking health..."
-              curl -f http://localhost:8000/health || echo "⚠️ Health check pending..."
-
-              # Mostrar logs recentes
-              echo "📋 Recent logs:"
-              docker logs $CONTAINER_NAME --tail 10
-            else
-              echo "❌ Container failed to start!"
-              docker-compose logs --tail 50
-              exit 1
-            fi
-
-            # Limpar imagens antigas
-            echo "🧹 Cleaning up old images..."
-            docker image prune -f
-
-            echo "🎉 Deployment complete!"
-          ENDSSH
-
-      # 5. Notificar sucesso
-      - name: Deployment Success
-        if: success()
-        run: |
-          echo "✅ Deploy realizado com sucesso!"
-          echo "🌐 Bot disponível em: https://bot.${{ secrets.DOMAIN }}"
-
-      # 6. Notificar falha
-      - name: Deployment Failed
-        if: failure()
-        run: |
-          echo "❌ Deploy falhou! Verifique os logs acima."
+          echo "🎉 Deployment complete!"
+        else
+          echo "❌ Container failed to start!"
+          docker compose logs --tail 50
           exit 1
+        fi
+
+        ENDSSH
+
+    - name: ✅ Deployment Success
+      if: success()
+      run: |
+        echo "✅ Deploy realizado com sucesso!"
+        echo "🌐 Bot disponível em: https://bot.automacaovn.shop"
+
+    - name: ❌ Deployment Failed
+      if: failure()
+      run: |
+        echo "❌ Deploy falhou! Verifique os logs acima."
+        exit 1
