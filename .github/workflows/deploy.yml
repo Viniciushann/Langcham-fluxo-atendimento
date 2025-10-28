@@ -44,7 +44,7 @@ jobs:
 
         # Criar arquivo .env com as variáveis de ambiente
         echo "📝 Creating .env file..."
-        cat > .env << 'ENVEOF'
+        cat > .env << ENVEOF
         WHATSAPP_API_URL=https://evolution.centrooestedrywalldry.com.br
         WHATSAPP_API_KEY=${{ secrets.WHATSAPP_API_KEY }}
         WHATSAPP_INSTANCE=Centro_oeste_draywal
