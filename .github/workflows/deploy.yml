@@ -47,8 +47,12 @@ jobs:
           chmod 700 ~/.ssh
 
           # Salvar chave privada (preservando quebras de linha)
-          echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/deploy_key
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
+
+          # Debug: Mostrar primeiras linhas da chave
+          echo "Key file first line:"
+          head -1 ~/.ssh/deploy_key
 
           # Validar chave
           ssh-keygen -l -f ~/.ssh/deploy_key || echo "Warning: Key validation failed"
