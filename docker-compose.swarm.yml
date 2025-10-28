@@ -1,0 +1,75 @@
+services:
+  whatsapp-bot:
+    image: whatsapp-bot-langchain:latest
+
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.whatsapp-bot.rule=Host(`bot.automacaovn.shop`)"
+        - "traefik.http.routers.whatsapp-bot.entrypoints=websecure"
+        - "traefik.http.routers.whatsapp-bot.tls.certresolver=letsencrypt"
+        - "traefik.http.services.whatsapp-bot.loadbalancer.server.port=8000"
+        - "traefik.docker.network=viniciushannnet"
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    environment:
+      # Evolution API
+      - WHATSAPP_API_URL=https://evolution.centrooestedrywalldry.com.br
+      - WHATSAPP_API_KEY=${WHATSAPP_API_KEY}
+      - WHATSAPP_INSTANCE=Centro_oeste_draywal
+
+      # OpenAI
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+
+      # Supabase
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - POSTGRES_CONNECTION_STRING=${POSTGRES_CONNECTION_STRING}
+
+      # Redis (na mesma network Swarm)
+      - REDIS_HOST=redis_redis
+      - REDIS_PORT=6379
+
+      # Segurança
+      - SECRET_KEY=${SECRET_KEY}
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
+
+      # Aplicação
+      - DOMAIN=bot.automacaovn.shop
+      - ENVIRONMENT=production
+      - PORT=8000
+      - HOST=0.0.0.0
+      - LOG_LEVEL=INFO
+      - BOT_PHONE_NUMBER=556292745972
+      - MESSAGE_GROUP_DELAY=25
+      - GOOGLE_CALENDAR_CREDENTIALS_FILE=/app/credentials.json
+      - CORS_ORIGINS=https://evolution.centrooestedrywalldry.com.br,https://bot.automacaovn.shop
+
+    networks:
+      - viniciushannnet
+
+    volumes:
+      - whatsapp-bot-logs:/app/logs
+
+networks:
+  viniciushannnet:
+    external: true
+
+volumes:
+  whatsapp-bot-logs:
+    driver: local

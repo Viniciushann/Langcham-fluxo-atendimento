@@ -42,42 +42,62 @@ jobs:
         echo "📍 Current commit:"
         git log -1 --oneline
 
-        # Usar Docker Compose v2 (plugin do Docker)
-        echo "🔨 Building and starting containers..."
-        docker compose down 2>/dev/null || true
-        docker compose build --no-cache
-        docker compose up -d
+        # Build da imagem Docker
+        echo "🔨 Building Docker image..."
+        docker build -t whatsapp-bot-langchain:latest .
+
+        # Deploy via Docker Stack (Swarm mode)
+        echo "🚀 Deploying to Docker Swarm..."
+        docker stack rm whatsapp-bot 2>/dev/null || true
+        sleep 5
+        docker stack deploy -c docker-compose.swarm.yml whatsapp-bot
 
         # Aguardar container iniciar
         echo "⏳ Waiting for container to start..."
         sleep 15
 
-        # Verificar se container está rodando
-        CONTAINER_NAME=$(docker ps --filter "name=whatsapp-bot" --format "{{.Names}}" | head -n 1)
+        # Verificar status do stack
+        echo "📊 Stack status:"
+        docker stack ps whatsapp-bot
 
-        if [ -n "$CONTAINER_NAME" ]; then
-          echo "✅ Container $CONTAINER_NAME is running!"
+        echo ""
+        echo "🔍 Service status:"
+        docker stack services whatsapp-bot
+
+        # Aguardar serviço ficar pronto
+        echo ""
+        echo "⏳ Waiting for service to be ready..."
+        sleep 10
+
+        # Verificar se serviço está rodando
+        SERVICE_ID=$(docker service ps whatsapp-bot_whatsapp-bot -q --filter "desired-state=running" | head -n 1)
+
+        if [ -n "$SERVICE_ID" ]; then
+          echo "✅ Service is running!"
 
           # Health check
           echo "🏥 Checking health..."
           if curl -f http://localhost:8000/health; then
             echo "✅ Health check passed!"
           else
-            echo "⚠️ Health check failed, but container is running"
+            echo "⚠️ Health check pending, but service is running"
           fi
 
           # Mostrar logs recentes
+          echo ""
           echo "📋 Recent logs:"
-          docker logs $CONTAINER_NAME --tail 15
+          docker service logs whatsapp-bot_whatsapp-bot --tail 20 --no-trunc
 
           # Limpar imagens antigas
+          echo ""
           echo "🧹 Cleaning up old images..."
           docker image prune -f
 
+          echo ""
           echo "🎉 Deployment complete!"
         else
-          echo "❌ Container failed to start!"
-          docker compose logs --tail 50
+          echo "❌ Service failed to start!"
+          docker service logs whatsapp-bot_whatsapp-bot --tail 50
           exit 1
         fi
 
