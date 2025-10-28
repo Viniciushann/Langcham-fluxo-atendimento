@@ -58,7 +58,7 @@ services:
       - BOT_PHONE_NUMBER=556292745972
       - MESSAGE_GROUP_DELAY=25
       - GOOGLE_CALENDAR_CREDENTIALS_FILE=/app/credentials.json
-      - GOOGLE_CALENDAR_ID=centrooestdrywalldry@gmail.com
+      - GOOGLE_CALENDAR_ID=centrooestedrywalldry@gmail.com
       - CORS_ORIGINS=https://evolution.centrooestedrywalldry.com.br,https://bot.automacaovn.shop
 
     networks:

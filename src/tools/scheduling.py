@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 # Configurações do Google Calendar
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 SERVICE_ACCOUNT_FILE = os.getenv('GOOGLE_CALENDAR_CREDENTIALS_FILE', 'credentials.json')
-CALENDAR_ID = os.getenv('GOOGLE_CALENDAR_ID', 'centrooestdrywalldry@gmail.com')
+CALENDAR_ID = os.getenv('GOOGLE_CALENDAR_ID', 'centrooestedrywalldry@gmail.com')
 TIMEZONE = 'America/Sao_Paulo'
 
 # Configurações de horário comercial
