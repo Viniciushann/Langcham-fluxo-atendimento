@@ -452,23 +452,18 @@ Email: {email_cliente}
                 'dateTime': data_fim.isoformat(),
                 'timeZone': TIMEZONE,
             },
-            'attendees': [
-                {'email': email_cliente}
-            ],
             'reminders': {
                 'useDefault': False,
                 'overrides': [
-                    {'method': 'email', 'minutes': 24 * 60},  # 1 dia antes
                     {'method': 'popup', 'minutes': 60},  # 1 hora antes
                 ],
             },
         }
 
-        # Inserir evento no calendar
+        # Inserir evento no calendar (sem attendees para evitar erro de Service Account)
         evento_criado = service.events().insert(
             calendarId=CALENDAR_ID,
-            body=evento,
-            sendUpdates='all'  # Envia email para participantes
+            body=evento
         ).execute()
 
         logger.info(f"Evento criado com sucesso: {evento_criado['id']}")
