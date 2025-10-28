@@ -18,9 +18,7 @@ from typing import Literal, Optional, Dict, List, Any
 from zoneinfo import ZoneInfo
 
 from langchain.tools import tool
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
@@ -36,8 +34,8 @@ logger = logging.getLogger(__name__)
 
 # Configurações do Google Calendar
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-CREDENTIALS_FILE = os.getenv('GOOGLE_CALENDAR_CREDENTIALS_FILE', 'credentials.json')
-TOKEN_FILE = 'token.json'
+SERVICE_ACCOUNT_FILE = os.getenv('GOOGLE_CALENDAR_CREDENTIALS_FILE', 'credentials.json')
+CALENDAR_ID = os.getenv('GOOGLE_CALENDAR_ID', 'centrooestdrywalldry@gmail.com')
 TIMEZONE = 'America/Sao_Paulo'
 
 # Configurações de horário comercial
@@ -51,7 +49,7 @@ TELEFONE_TECNICO = "556298540075"  # +55 62 98540-0075
 
 def _get_calendar_service() -> Any:
     """
-    Obtém o serviço do Google Calendar autenticado.
+    Obtém o serviço do Google Calendar autenticado via Service Account.
 
     Returns:
         Resource: Serviço do Google Calendar
@@ -60,44 +58,28 @@ def _get_calendar_service() -> Any:
         FileNotFoundError: Se o arquivo de credenciais não for encontrado
         Exception: Erros de autenticação
     """
-    creds = None
+    if not os.path.exists(SERVICE_ACCOUNT_FILE):
+        raise FileNotFoundError(
+            f"Arquivo de credenciais da Service Account não encontrado: {SERVICE_ACCOUNT_FILE}"
+        )
 
-    # Carrega token existente se disponível
-    if os.path.exists(TOKEN_FILE):
-        try:
-            creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
-            logger.info("Token carregado com sucesso")
-        except Exception as e:
-            logger.warning(f"Erro ao carregar token: {e}")
+    try:
+        # Carregar credenciais da Service Account
+        credentials = service_account.Credentials.from_service_account_file(
+            SERVICE_ACCOUNT_FILE,
+            scopes=SCOPES
+        )
+        logger.info("Service Account carregada com sucesso")
 
-    # Se não há credenciais válidas, faz login
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            try:
-                creds.refresh(Request())
-                logger.info("Token renovado com sucesso")
-            except Exception as e:
-                logger.error(f"Erro ao renovar token: {e}")
-                creds = None
+        # Criar serviço do Google Calendar
+        service = build('calendar', 'v3', credentials=credentials)
+        logger.info("Serviço do Google Calendar inicializado")
 
-        if not creds:
-            if not os.path.exists(CREDENTIALS_FILE):
-                raise FileNotFoundError(
-                    f"Arquivo de credenciais não encontrado: {CREDENTIALS_FILE}"
-                )
+        return service
 
-            flow = InstalledAppFlow.from_client_secrets_file(
-                CREDENTIALS_FILE, SCOPES
-            )
-            creds = flow.run_local_server(port=0)
-            logger.info("Autenticação realizada com sucesso")
-
-        # Salva o token para próximas execuções
-        with open(TOKEN_FILE, 'w') as token:
-            token.write(creds.to_json())
-            logger.info("Token salvo com sucesso")
-
-    return build('calendar', 'v3', credentials=creds)
+    except Exception as e:
+        logger.error(f"Erro ao autenticar com Service Account: {e}")
+        raise
 
 
 def _parsear_data(data_str: str) -> datetime:
@@ -299,7 +281,7 @@ async def consultar_horarios(
 
         # Buscar eventos existentes
         events_result = service.events().list(
-            calendarId='primary',
+            calendarId=CALENDAR_ID,
             timeMin=inicio_dia.isoformat(),
             timeMax=fim_dia.isoformat(),
             singleEvents=True,
@@ -440,7 +422,7 @@ async def agendar_horario(
 
         # Verificar se horário está disponível
         events_result = service.events().list(
-            calendarId='primary',
+            calendarId=CALENDAR_ID,
             timeMin=data_inicio.isoformat(),
             timeMax=data_fim.isoformat(),
             singleEvents=True
@@ -484,7 +466,7 @@ Email: {email_cliente}
 
         # Inserir evento no calendar
         evento_criado = service.events().insert(
-            calendarId='primary',
+            calendarId=CALENDAR_ID,
             body=evento,
             sendUpdates='all'  # Envia email para participantes
         ).execute()
@@ -583,7 +565,7 @@ async def cancelar_horario(
         fim_busca = data_busca + timedelta(hours=2)
 
         events_result = service.events().list(
-            calendarId='primary',
+            calendarId=CALENDAR_ID,
             timeMin=inicio_busca.isoformat(),
             timeMax=fim_busca.isoformat(),
             singleEvents=True,
@@ -618,7 +600,7 @@ async def cancelar_horario(
 
         # Deletar evento
         service.events().delete(
-            calendarId='primary',
+            calendarId=CALENDAR_ID,
             eventId=evento_encontrado['id'],
             sendUpdates='all'  # Notifica participantes
         ).execute()
@@ -748,7 +730,7 @@ async def atualizar_horario(
         fim_busca = data_antiga + timedelta(hours=2)
 
         events_result = service.events().list(
-            calendarId='primary',
+            calendarId=CALENDAR_ID,
             timeMin=inicio_busca.isoformat(),
             timeMax=fim_busca.isoformat(),
             singleEvents=True,
@@ -776,7 +758,7 @@ async def atualizar_horario(
         data_nova_fim = data_nova + timedelta(hours=DURACAO_CONSULTA)
 
         eventos_conflito = service.events().list(
-            calendarId='primary',
+            calendarId=CALENDAR_ID,
             timeMin=data_nova.isoformat(),
             timeMax=data_nova_fim.isoformat(),
             singleEvents=True
@@ -822,7 +804,7 @@ async def atualizar_horario(
 
         # Atualizar no calendar
         evento_atualizado = service.events().update(
-            calendarId='primary',
+            calendarId=CALENDAR_ID,
             eventId=evento_encontrado['id'],
             body=evento_encontrado,
             sendUpdates='all'  # Notifica participantes
