@@ -73,7 +73,9 @@ jobs:
         ${{ secrets.GOOGLE_CALENDAR_CREDENTIALS }}
         CREDEOF
 
-        # Criar token.json vazio (será preenchido após primeira autenticação)
+        # Remover token.json se for diretório e criar arquivo vazio
+        echo "📝 Setting up token.json..."
+        rm -rf token.json
         echo "{}" > token.json
 
         # Build da imagem Docker
