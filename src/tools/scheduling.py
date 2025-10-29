@@ -43,8 +43,23 @@ HORARIO_INICIO = 8  # 8h
 HORARIO_FIM = 18    # 18h
 DURACAO_CONSULTA = 1  # 1 hora
 
-# Configuração do técnico
-TELEFONE_TECNICO = "556298540075"  # +55 62 98540-0075
+# Configuração do técnico - Número antigo sem 9º dígito (pré-2016)
+# Formato: 55 (Brasil) + 62 (Goiás) + 8540-0075 (8 dígitos) = 12 dígitos total
+TELEFONE_TECNICO_PRINCIPAL = os.getenv('TELEFONE_TECNICO', '55628540075')
+
+# Sistema de fallback (múltiplos técnicos)
+TELEFONES_TECNICOS = [
+    TELEFONE_TECNICO_PRINCIPAL,
+    os.getenv('TELEFONE_TECNICO_BACKUP', '556281091167'),  # Backup com 9º dígito
+]
+
+# Filtrar números vazios
+TELEFONES_TECNICOS = [t for t in TELEFONES_TECNICOS if t]
+
+# Manter compatibilidade com código existente
+TELEFONE_TECNICO = TELEFONES_TECNICOS[0] if TELEFONES_TECNICOS else '55628540075'
+
+logger.info(f"📞 Sistema de notificação configurado com {len(TELEFONES_TECNICOS)} número(s)")
 
 
 def _get_calendar_service() -> Any:
@@ -169,26 +184,31 @@ async def _notificar_tecnico(
     """
     Envia notificação WhatsApp para o técnico sobre novo agendamento.
 
+    Sistema com fallback automático:
+    - Tenta múltiplos números em ordem de prioridade
+    - Não bloqueia o agendamento se notificação falhar
+    - Loga detalhadamente cada tentativa
+
     Args:
-        nome_cliente: Nome do cliente
-        telefone_cliente: Telefone do cliente
-        endereco: Endereço do serviço
+        nome_cliente: Nome completo do cliente
+        telefone_cliente: Telefone do cliente com DDD
+        endereco: Endereço completo do serviço
         data_inicio: Data e hora do agendamento
-        tipo_servico: Tipo de serviço agendado
+        tipo_servico: Tipo de serviço (padrão: "visita/orçamento")
 
     Returns:
         bool: True se enviou com sucesso, False caso contrário
+        IMPORTANTE: Sempre retorna True no final para não bloquear agendamento
     """
     try:
         settings = get_settings()
-
         whatsapp = WhatsAppClient(
             base_url=settings.whatsapp_api_url,
             api_key=settings.whatsapp_api_key,
             instance=settings.whatsapp_instance
         )
 
-        # Formatar data/hora
+        # Formatar data/hora em português
         data_formatada = data_inicio.strftime("%d/%m/%Y")
         hora_formatada = data_inicio.strftime("%H:%M")
         dia_semana = data_inicio.strftime("%A")
@@ -205,7 +225,7 @@ async def _notificar_tecnico(
         }
         dia_semana_pt = dias_pt.get(dia_semana, dia_semana)
 
-        # Montar mensagem
+        # Montar mensagem para o técnico
         mensagem = f"""🔔 *NOVO AGENDAMENTO*
 
 📅 *Data:* {dia_semana_pt}, {data_formatada}
@@ -219,22 +239,70 @@ async def _notificar_tecnico(
 
 ⚠️ Lembre-se de confirmar presença com o cliente!"""
 
-        # Enviar mensagem
-        resultado = await whatsapp.enviar_mensagem(
-            telefone=TELEFONE_TECNICO,
-            texto=mensagem
-        )
+        # Tentar enviar para cada técnico até conseguir
+        sucesso = False
 
-        if resultado:
-            logger.info(f"Notificação enviada ao técnico para agendamento de {nome_cliente}")
-            return True
-        else:
-            logger.warning("Falha ao enviar notificação ao técnico")
-            return False
+        for i, telefone in enumerate(TELEFONES_TECNICOS, 1):
+            if not telefone:
+                continue
+
+            try:
+                logger.info(f"📤 Tentativa {i}/{len(TELEFONES_TECNICOS)}: Notificando técnico {telefone}")
+
+                resultado = await whatsapp.enviar_mensagem(
+                    telefone=telefone,
+                    texto=mensagem
+                )
+
+                if resultado:
+                    logger.info(f"✅ Técnico notificado com sucesso: {telefone}")
+                    sucesso = True
+                    break  # Sucesso! Não precisa tentar outros números
+                else:
+                    logger.warning(f"⚠️ Resposta vazia ao enviar para {telefone}")
+
+            except Exception as e:
+                error_msg = str(e).lower()
+
+                # Diagnóstico específico do erro
+                if "exists" in error_msg and "false" in error_msg:
+                    logger.warning(f"❌ Número {telefone} não existe no WhatsApp")
+                elif "400" in error_msg or "bad request" in error_msg:
+                    logger.warning(f"❌ Requisição inválida para {telefone}: {e}")
+                else:
+                    logger.warning(f"⚠️ Erro desconhecido ao enviar para {telefone}: {e}")
+
+                # Continuar para próximo número
+                continue
+
+        if not sucesso:
+            # Nenhum número funcionou
+            logger.error(f"""
+╔════════════════════════════════════════════════════════════╗
+║  ❌ FALHA NA NOTIFICAÇÃO DO TÉCNICO                       ║
+╚════════════════════════════════════════════════════════════╝
+
+Números tentados: {TELEFONES_TECNICOS}
+Cliente: {nome_cliente}
+Horário: {data_formatada} às {hora_formatada}
+
+⚠️  AÇÃO NECESSÁRIA:
+1. Verificar se os números dos técnicos estão corretos
+2. Confirmar que os números têm WhatsApp ativo
+3. Verificar logs da Evolution API
+4. Atualizar variável de ambiente TELEFONE_TECNICO se necessário
+
+ℹ️  O AGENDAMENTO FOI CRIADO COM SUCESSO no Google Calendar.
+   Apenas a notificação ao técnico falhou.
+""")
+
+        # IMPORTANTE: Sempre retorna True para não bloquear o agendamento do cliente
+        return True
 
     except Exception as e:
-        logger.error(f"Erro ao notificar técnico: {e}")
-        return False
+        logger.error(f"❌ Erro crítico ao notificar técnico: {e}", exc_info=True)
+        # Retorna True para não bloquear o agendamento do cliente
+        return True
 
 
 async def consultar_horarios(
@@ -452,18 +520,23 @@ Email: {email_cliente}
                 'dateTime': data_fim.isoformat(),
                 'timeZone': TIMEZONE,
             },
+            'attendees': [
+                {'email': email_cliente}
+            ],
             'reminders': {
                 'useDefault': False,
                 'overrides': [
+                    {'method': 'email', 'minutes': 24 * 60},  # 1 dia antes
                     {'method': 'popup', 'minutes': 60},  # 1 hora antes
                 ],
             },
         }
 
-        # Inserir evento no calendar (sem attendees para evitar erro de Service Account)
+        # Inserir evento no calendar
         evento_criado = service.events().insert(
             calendarId=CALENDAR_ID,
-            body=evento
+            body=evento,
+            sendUpdates='all'  # Envia email para participantes
         ).execute()
 
         logger.info(f"Evento criado com sucesso: {evento_criado['id']}")
