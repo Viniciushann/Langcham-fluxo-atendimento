@@ -520,9 +520,6 @@ Email: {email_cliente}
                 'dateTime': data_fim.isoformat(),
                 'timeZone': TIMEZONE,
             },
-            'attendees': [
-                {'email': email_cliente}
-            ],
             'reminders': {
                 'useDefault': False,
                 'overrides': [
@@ -535,8 +532,7 @@ Email: {email_cliente}
         # Inserir evento no calendar
         evento_criado = service.events().insert(
             calendarId=CALENDAR_ID,
-            body=evento,
-            sendUpdates='all'  # Envia email para participantes
+            body=evento
         ).execute()
 
         logger.info(f"Evento criado com sucesso: {evento_criado['id']}")
@@ -669,8 +665,7 @@ async def cancelar_horario(
         # Deletar evento
         service.events().delete(
             calendarId=CALENDAR_ID,
-            eventId=evento_encontrado['id'],
-            sendUpdates='all'  # Notifica participantes
+            eventId=evento_encontrado['id']
         ).execute()
 
         logger.info(f"Evento cancelado com sucesso: {evento_encontrado['id']}")
@@ -867,15 +862,13 @@ async def atualizar_horario(
                     descricao.split('Email: ')[1].split('\n')[0],
                     email_cliente
                 )
-                evento_encontrado['attendees'] = [{'email': email_cliente}]
             evento_encontrado['description'] = descricao
 
         # Atualizar no calendar
         evento_atualizado = service.events().update(
             calendarId=CALENDAR_ID,
             eventId=evento_encontrado['id'],
-            body=evento_encontrado,
-            sendUpdates='all'  # Notifica participantes
+            body=evento_encontrado
         ).execute()
 
         logger.info(f"Evento atualizado com sucesso: {evento_atualizado['id']}")
