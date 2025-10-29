@@ -43,21 +43,22 @@ HORARIO_INICIO = 8  # 8h
 HORARIO_FIM = 18    # 18h
 DURACAO_CONSULTA = 1  # 1 hora
 
-# Configuração do técnico - Número antigo sem 9º dígito (pré-2016)
-# Formato: 55 (Brasil) + 62 (Goiás) + 8540-0075 (8 dígitos) = 12 dígitos total
-TELEFONE_TECNICO_PRINCIPAL = os.getenv('TELEFONE_TECNICO', '55628540075')
+# Configuração do técnico - Número com 9º dígito (pós-2016)
+# Formato: 55 (Brasil) + 62 (Goiás) + 9 + 2935-358 (9 dígitos) = 13 dígitos total
+TELEFONE_TECNICO_PRINCIPAL = os.getenv('TELEFONE_TECNICO', '556292935358')
 
 # Sistema de fallback (múltiplos técnicos)
 TELEFONES_TECNICOS = [
     TELEFONE_TECNICO_PRINCIPAL,
-    os.getenv('TELEFONE_TECNICO_BACKUP', '556281091167'),  # Backup com 9º dígito
+    os.getenv('TELEFONE_TECNICO_BACKUP', '556281091167'),  # Backup alternativo
+    os.getenv('TELEFONE_TECNICO_BACKUP_2', '55628540075'),  # Backup número antigo
 ]
 
 # Filtrar números vazios
 TELEFONES_TECNICOS = [t for t in TELEFONES_TECNICOS if t]
 
 # Manter compatibilidade com código existente
-TELEFONE_TECNICO = TELEFONES_TECNICOS[0] if TELEFONES_TECNICOS else '55628540075'
+TELEFONE_TECNICO = TELEFONES_TECNICOS[0] if TELEFONES_TECNICOS else '556292935358'
 
 logger.info(f"📞 Sistema de notificação configurado com {len(TELEFONES_TECNICOS)} número(s)")
 
