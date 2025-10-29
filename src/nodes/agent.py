@@ -168,12 +168,16 @@ def _create_retriever_tool() -> Any:
 # SYSTEM PROMPT
 # ==============================================
 
-def _get_system_prompt() -> str:
+def _get_system_prompt(cliente_nome: str = "Cliente", telefone_cliente: str = "") -> str:
     """
-    Retorna o system prompt completo para o agente.
-
+    Retorna o system prompt completo para o agente com contexto do cliente atual.
+    
+    Args:
+        cliente_nome: Nome real do cliente desta conversa (OBRIGATÓRIO para agendamentos)
+        telefone_cliente: Telefone real do cliente desta conversa (OBRIGATÓRIO para agendamentos)
+    
     Returns:
-        str: Prompt de sistema formatado
+        str: Prompt de sistema com dados do cliente injetados
     """
     agora = datetime.now()
     data_hora_atual = agora.strftime('%d/%m/%Y %H:%M:%S')
@@ -182,6 +186,13 @@ def _get_system_prompt() -> str:
         "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"
     ][agora.weekday()]
 
+    # LOG TEMPORÁRIO PARA DEBUG
+    logger.info("━" * 60)
+    logger.info("🔍 DEBUG: Dados injetados no system prompt:")
+    logger.info(f"   cliente_nome = '{cliente_nome}'")
+    logger.info(f"   telefone_cliente = '{telefone_cliente}'")
+    logger.info("━" * 60)
+
     system_prompt = f"""
 <quem_voce_eh>
 Você é **Carol**, a agente inteligente da **Centro-Oeste Drywall & Dry**.
@@ -189,6 +200,55 @@ Seu papel é atender clientes pelo WhatsApp com profissionalismo, simpatia e efi
 
 Você é especializada em drywall, gesso, forros e divisórias.
 </quem_voce_eh>
+
+<contexto_cliente_atual>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️  DADOS REAIS DO CLIENTE DESTA CONVERSA ⚠️
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+👤 Nome: {cliente_nome}
+📱 Telefone: {telefone_cliente}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔴 REGRA CRÍTICA - AGENDAMENTOS:
+
+Quando você usar a ferramenta `agendamento_tool`, você DEVE SEMPRE usar 
+os dados reais mostrados acima. NUNCA use valores genéricos ou inventados.
+
+✅ FORMATO CORRETO:
+```python
+agendamento_tool(
+    nome_cliente="{cliente_nome}",
+    telefone_cliente="{telefone_cliente}",
+    email_cliente="sememail@gmail.com",  # Pode usar genérico
+    data_consulta_reuniao="DD/MM/YYYY HH:MM",
+    intencao="agendar",
+    informacao_extra="Endereço: [endereço fornecido pelo cliente]"
+)
+```
+
+❌ FORMATOS INCORRETOS (NUNCA FAÇA):
+```python
+# ❌ ERRADO - Valores genéricos
+nome_cliente="Cliente"
+telefone_cliente="556299999999"
+telefone_cliente="5527999999999"
+
+# ❌ ERRADO - Inventando dados
+nome_cliente="Nome não fornecido"
+telefone_cliente="Número não fornecido"
+```
+
+📌 IMPORTANTE:
+- {cliente_nome} é o nome REAL da pessoa conversando com você
+- {telefone_cliente} é o telefone REAL desta conversa
+- Estes dados já estão validados e são confiáveis
+- Use EXATAMENTE como mostrado acima (copie e cole)
+- Se o cliente não mencionou o nome dele na conversa, ainda assim use "{cliente_nome}"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</contexto_cliente_atual>
 
 <suas_funcoes>
 ⚠️ PRIORIDADE MÁXIMA: Sempre ofereça AGENDAR VISITA TÉCNICA ou FALAR COM O TÉCNICO
@@ -426,12 +486,16 @@ Lembre-se: Você representa a empresa. Seja profissional, prestativa e eficiente
 # CRIAÇÃO DO AGENTE
 # ==============================================
 
-async def _create_agent():
+async def _create_agent(cliente_nome: str = "Cliente", telefone_cliente: str = ""):
     """
-    Cria e configura o agente ReAct com todas as ferramentas.
-
+    Cria e configura o agente ReAct com todas as ferramentas e contexto do cliente.
+    
+    Args:
+        cliente_nome: Nome do cliente para injetar no contexto
+        telefone_cliente: Telefone do cliente para injetar no contexto
+    
     Returns:
-        RunnableWithMessageHistory: Agente configurado
+        RunnableWithMessageHistory: Agente configurado com dados do cliente
 
     Raises:
         Exception: Se configuração falhar
@@ -458,8 +522,13 @@ async def _create_agent():
 
         logger.info(f"Agente configurado com {len(tools)} ferramentas: {[t.name for t in tools]}")
 
-        # System prompt
-        system_prompt = _get_system_prompt()
+        # System prompt COM dados do cliente atual
+        system_prompt = _get_system_prompt(
+            cliente_nome=cliente_nome,
+            telefone_cliente=telefone_cliente
+        )
+        
+        logger.info(f"✅ Agente configurado com contexto do cliente: {cliente_nome}")
 
         # Vincular ferramentas ao LLM (bind_tools)
         llm_with_tools = llm.bind_tools(tools)
@@ -527,10 +596,12 @@ async def processar_agente(state: AgentState) -> AgentState:
             state["next_action"] = AcaoFluxo.ERRO.value
             return state
 
-        cliente_numero = state.get("cliente_numero", "desconhecido")
+        # Extrair dados REAIS do state
+        cliente_numero = state.get("cliente_numero", "")
         cliente_nome = state.get("cliente_nome", "Cliente")
 
         logger.info(f"Cliente: {cliente_nome} ({cliente_numero})")
+        logger.info(f"📋 Injetando dados do cliente no contexto do agente...")
 
         # ==============================================
         # 2. PREPARAR ENTRADA DO USUÁRIO
@@ -567,9 +638,16 @@ async def processar_agente(state: AgentState) -> AgentState:
         logger.info(f"Entrada do usuário (primeiros 200 chars): {entrada_usuario[:200]}...")
 
         # ==============================================
-        # 3. CRIAR AGENTE
+        # 3. CRIAR AGENTE COM DADOS DO CLIENTE
         # ==============================================
-        agent = await _create_agent()
+        agent = await _create_agent(
+            cliente_nome=cliente_nome,
+            telefone_cliente=cliente_numero
+        )
+        
+        logger.info("✅ Agente criado com dados do cliente injetados:")
+        logger.info(f"   - Nome: {cliente_nome}")
+        logger.info(f"   - Telefone: {cliente_numero}")
 
         # ==============================================
         # 4. CARREGAR HISTÓRICO (se memória estiver habilitada)
