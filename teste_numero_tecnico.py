@@ -34,9 +34,7 @@ logger = logging.getLogger(__name__)
 # CONFIGURAÇÃO DO TESTE
 NOVO_NUMERO_TECNICO = "14372591659"  # Novo número para testar
 NUMEROS_ATUAIS = [
-    "556292935358",  # Técnico principal atual
-    "556281091167",  # Backup atual
-    "55628540075"    # Backup 2 atual
+    "556281091167",  # Backup válido atual
 ]
 
 async def testar_numero_whatsapp(numero: str, descricao: str) -> dict:
@@ -155,7 +153,7 @@ async def main():
     resultados.append(resultado_novo)
     
     # 2. Testar números atuais (para comparação)
-    print(f"\n🔍 FASE 2: Testando números ATUAIS (para comparação)")
+    print(f"\n🔍 FASE 2: Testando número ATUAL (para comparação)")
     
     for i, numero in enumerate(NUMEROS_ATUAIS, 1):
         resultado_atual = await testar_numero_whatsapp(

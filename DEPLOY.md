@@ -127,9 +127,9 @@ git push -u origin main
 4. **No servidor Hetzner, clonar o repositório:**
 
 ```bash
-ssh root@seu-servidor-hetzner
+ssh root@46.62.155.254
 cd /opt
-git clone https://github.com/seu-usuario/whatsapp-bot.git
+git clone https://github.com/Viniciushann/Langcham-fluxo-atendimento.git whatsapp-bot
 cd whatsapp-bot
 ```
 
@@ -140,10 +140,10 @@ cd whatsapp-bot
 tar -czf whatsapp-bot.tar.gz .
 
 # Enviar para servidor
-scp whatsapp-bot.tar.gz root@seu-servidor:/opt/
+scp whatsapp-bot.tar.gz root@46.62.155.254:/opt/
 
 # No servidor, descompactar
-ssh root@seu-servidor
+ssh root@46.62.155.254
 cd /opt
 tar -xzf whatsapp-bot.tar.gz
 ```
@@ -242,7 +242,7 @@ No seu provedor de DNS, adicione:
 ```
 Tipo: A
 Nome: bot
-Valor: IP-DO-SERVIDOR-HETZNER
+Valor: 46.62.155.254
 TTL: 300
 ```
 
@@ -327,7 +327,7 @@ Envie mensagem WhatsApp para o número conectado e verifique:
 ### Atualizar via Git:
 
 ```bash
-ssh root@seu-servidor
+ssh root@46.62.155.254
 cd /opt/whatsapp-bot
 git pull
 docker-compose down

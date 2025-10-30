@@ -13,7 +13,7 @@ echo "🔄 ATUALIZANDO NÚMERO DO TÉCNICO EM PRODUÇÃO"
 echo "=============================================="
 echo "📅 Data: $(date)"
 echo "📱 Novo número: +14372591659"
-echo "📱 Backup: 556292935358 (número atual vira backup)"
+echo "📱 Backup: 556281091167 (único backup válido)"
 echo ""
 
 # Confirmação de segurança
@@ -57,16 +57,17 @@ content = re.sub(
     content
 )
 
-# Atualizar sistema de fallback
+# Atualizar sistema de fallback (apenas 1 backup)
 content = re.sub(
     r"os\.getenv\('TELEFONE_TECNICO_BACKUP', '[^']+'\)",
-    "os.getenv('TELEFONE_TECNICO_BACKUP', '556292935358')",
+    "os.getenv('TELEFONE_TECNICO_BACKUP', '556281091167')",
     content
 )
 
+# Remover linhas do TELEFONE_TECNICO_BACKUP_2 
 content = re.sub(
-    r"os\.getenv\('TELEFONE_TECNICO_BACKUP_2', '[^']+'\)",
-    "os.getenv('TELEFONE_TECNICO_BACKUP_2', '556281091167')",
+    r"\s*os\.getenv\('TELEFONE_TECNICO_BACKUP_2', '[^']+'\),?\s*",
+    "",
     content
 )
 
@@ -100,8 +101,7 @@ fi
 
 # Exportar para sessão atual
 export TELEFONE_TECNICO='14372591659'
-export TELEFONE_TECNICO_BACKUP='556292935358'
-export TELEFONE_TECNICO_BACKUP_2='556281091167'
+export TELEFONE_TECNICO_BACKUP='556281091167'
 
 echo "✅ Variáveis de ambiente atualizadas!"
 
@@ -157,9 +157,7 @@ echo ""
 echo "🎉 ATUALIZAÇÃO CONCLUÍDA!"
 echo "========================="
 echo "✅ Número do técnico atualizado para: +14372591659"
-echo "📱 Números de backup configurados:"
-echo "   - Backup 1: 556292935358"
-echo "   - Backup 2: 556281091167"
+echo "📱 Número de backup configurado: 556281091167"
 echo ""
 echo "📋 PRÓXIMOS PASSOS:"
 echo "1. 🧪 Teste fazendo um agendamento pelo WhatsApp"
